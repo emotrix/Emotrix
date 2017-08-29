@@ -11,12 +11,12 @@ with open('LICENSE') as f:
 
 setup(
     name='emotrix',
-    version='0.0.1',
+    version='0.0.2',
     description='BCI api for handling human emotions',
     long_description=readme,
-    author='Henzer G., César L., Freddy M., Matías V., Pablo S. and Jackeline G.',
+    author='Henzer G., César L., Freddy M., Matías V., Pablo S., Jackeline G., Angel M., Mario B., Kevin G., Sergio G., Diego J., Elisa P., Nancy M. and Maryalis.',
     author_email='',
-    url='https://github.com/henzer/EMOTRIX',
+    url='https://github.com/emotrix/EMOTRIX',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )

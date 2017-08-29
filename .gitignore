@@ -92,3 +92,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Files generated
+
+*.csv
+*.png
