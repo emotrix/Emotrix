@@ -3,14 +3,14 @@
 # Archivo:      emotrix_recorder.py
 # Proposito:    Este archivo es el encargado de leer la data directamente desde el EMOTIV, y guardarla en un archivo csv
 #               para luego hacer un preprocesamiento de ella.
-# Autor:        Henzer Garcia   12538
+# Autor:        Emotrix 2016-2017
 # **********************************************************************************************************************
 
 import platform
 import csv
 import time
 import sys
-sys.path.insert(0, '/home/emotrix/Documents/EMOTRIX/emokit')
+sys.path.insert(0, '/home/emotrix/Downloads/EMOTRIX/emokit')
 
 from emotiv import Emotiv
 import gevent
@@ -20,8 +20,9 @@ class EmotrixRecoder(object):
 
     #El metodo init define algunos parametros por defecto, para almacenar las lecturas del EMOTIV
     def __init__(self):
+        #secuencia de emociones
         self.sequence = ['happy', 'neutral', 'sad', 'happy', 'neutral', 'sad', 'happy', 'neutral', 'sad', 'happy', 'neutral', 'sad','happy', 'neutral', 'sad','happy', 'neutral', 'sad','happy', 'neutral', 'sad']
-        self.time_block = 7
+        self.time_block = 7 #tiempo que dura cada estimulo (intervalos)
         self.num_blocks = len(self.sequence)
         self.filename = 'data.csv'
 
@@ -47,9 +48,6 @@ class EmotrixRecoder(object):
         #Se define el escritor de las lecturas en el archivo CSV
         writer = csv.writer(open(self.filename, 'w'), delimiter='\t', quotechar='"')
         try:
-            row = ["Time", "F3", "F3 Quality", "F4", "F4 Quality", "AF3", "AF3 Quality", "AF4", "AF4 Quality", "Tag"]
-            writer.writerow(row)
-
             t0 = time.time()
             while True:
                 t = int(time.time()-t0)
@@ -68,17 +66,15 @@ class EmotrixRecoder(object):
 
                 # Se obtiene el paquete de datos, utilizando EMOKIT
                 packet = headset.dequeue()
-
+                #print packet.sensors
                 # Se construye la informacion a guardar
                 row = [str(t),
-                       str(packet.sensors['F3']['value']),
-                       str(packet.sensors['F3']['quality']),
-                       str(packet.sensors['F4']['value']),
-                       str(packet.sensors['F4']['quality']),
-                       str(packet.sensors['AF3']['value']),
-                       str(packet.sensors['AF3']['quality']),
-                       str(packet.sensors['AF4']['value']),
-                       str(packet.sensors['AF4']['quality']),
+                       "F3:" + str(packet.sensors['F3']['quality']) + "," + str(packet.sensors['F3']['value']),
+                       "F4:" + str(packet.sensors['F4']['quality']) + "," + str(packet.sensors['F4']['value']),
+                       "AF3:" + str(packet.sensors['AF3']['quality']) + "," + str(packet.sensors['AF3']['value']),
+                       "AF4:" + str(packet.sensors['AF4']['quality']) + "," + str(packet.sensors['AF4']['value']),
+                       "O1:" + str(packet.sensors['O1']['quality']) + "," + str(packet.sensors['O1']['value']),
+                       "O2:" + str(packet.sensors['O2']['quality']) + "," + str(packet.sensors['O2']['value']),
                        tag]
                 # Se exporta a csv
                 writer.writerow(row)
@@ -105,4 +101,4 @@ er.start(['NOPE','RELAX', 'RELAX', 'RELAX', 'RELAX',
           'HAPPY', 'NEUTRAL', 'SAD', 'NEUTRAL',
           'HAPPY', 'NEUTRAL', 'SAD', 'NEUTRAL',
           'HAPPY', 'NEUTRAL', 'SAD', 'NEUTRAL',
-          ], 4, 'user21.csv')
+          ], 2, 'testt.csv')
