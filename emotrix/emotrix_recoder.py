@@ -9,7 +9,10 @@
 import platform
 import csv
 import time
-from emokit.emotiv import Emotiv
+import sys
+sys.path.insert(0, '/home/emotrix/Documents/EMOTRIX/emokit')
+
+from emotiv import Emotiv
 import gevent
 
 
