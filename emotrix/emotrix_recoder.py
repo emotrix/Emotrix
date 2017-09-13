@@ -44,6 +44,9 @@ class EmotrixRecoder(object):
         #Se define el escritor de las lecturas en el archivo CSV
         writer = csv.writer(open(self.filename, 'w'), delimiter='\t', quotechar='"')
         try:
+            row = ["Time", "F3", "F3 Quality", "F4", "F4 Quality", "AF3", "AF3 Quality", "AF4", "AF4 Quality", "Tag"]
+            writer.writerow(row)
+
             t0 = time.time()
             while True:
                 t = int(time.time()-t0)
@@ -65,10 +68,14 @@ class EmotrixRecoder(object):
 
                 # Se construye la informacion a guardar
                 row = [str(t),
-                       "F3:" + str(packet.sensors['F3']['quality']) + "," + str(packet.sensors['F3']['value']),
-                       "F4:" + str(packet.sensors['F4']['quality']) + "," + str(packet.sensors['F4']['value']),
-                       "AF3:" + str(packet.sensors['AF3']['quality']) + "," + str(packet.sensors['AF3']['value']),
-                       "AF4:" + str(packet.sensors['AF4']['quality']) + "," + str(packet.sensors['AF4']['value']),
+                       str(packet.sensors['F3']['value']),
+                       str(packet.sensors['F3']['quality']),
+                       str(packet.sensors['F4']['value']),
+                       str(packet.sensors['F4']['quality']),
+                       str(packet.sensors['AF3']['value']),
+                       str(packet.sensors['AF3']['quality']),
+                       str(packet.sensors['AF4']['value']),
+                       str(packet.sensors['AF4']['quality']),
                        tag]
                 # Se exporta a csv
                 writer.writerow(row)
