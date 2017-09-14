@@ -80,8 +80,8 @@ class EmotrixRecoder(object):
                 except:
                     print "Sensor incorrecto"
                     headset.close()
-
                 row.append(tag)
+                
                 # Se exporta a csv
                 writer.writerow(row)
                 print row
