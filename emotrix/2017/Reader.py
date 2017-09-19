@@ -15,7 +15,7 @@ class Reader(object):
         :param object: 
     """
     
-    def __init__(self, fileData, tagsToIgnore):
+    def __init__(self, fileData="data.csv", sensors=None, tagsToIgnore=None):
         """
         docstring here
             :param self: 
@@ -29,6 +29,8 @@ class Reader(object):
         self.f4 = np.array([])
         self.af3 = np.array([])
         self.af4 = np.array([])
+        self.o1 = np.array([])
+        self.o2 = np.array([])
         self.tag = np.array([])
         self.blocks = []
 
@@ -39,42 +41,32 @@ class Reader(object):
         """
         try:
             fileToRead = open(self.fileName, "rb")
-            reader = csv.reader(fileToRead, delimiter='\t', quotechar='"')
-
-            time, f3, f4, af3, af4, tag = [], [], [], [], [], []
+            reader = csv.reader(fileToRead, delimiter=',', quotechar='"')
+            t, f3, f4, af3, af4, o1, o2, tag = [], [], [], [], [], [], [], []
+            i = 0
             for row in reader:
-                if len(row) == 6:
-                    if row[5] in self.ignoreTags:
-                        continue
-                    f3_value = int(row[1].split(':')[1].split(',')[1])
-                    f3_quality = int(row[1].split(':')[1].split(',')[0])
-                    f4_value = int(row[2].split(':')[1].split(',')[1])
-                    f4_quality = int(row[2].split(':')[1].split(',')[0])
-                    af3_value = int(row[3].split(':')[1].split(',')[1])
-                    af3_quality = int(row[3].split(':')[1].split(',')[0])
-                    af4_value = int(row[4].split(':')[1].split(',')[1])
-                    af4_quality = int(row[4].split(':')[1].split(',')[0])
-                    #Filtro
-                    if min(f3_quality, f4_quality, af3_quality, af4_quality) >= 1:
-                        time.append(int(row[0]))
-                        f3.append(f3_value)
-                        f4.append(f4_value)
-                        af3.append(af3_value)
-                        af4.append(af4_value)
-                        tag.append(row[5])
+                if (i>0):
+                    t.append(int(row[0]))
+                    f3.append(int(row[1]))
+                    f4.append(int(row[3]))
+                    af3.append(int(row[5]))
+                    af4.append(int(row[7]))
+                    o1.append(int(row[9]))
+                    o2.append(int(row[11]))
+                    tag.append(row[13])
+                i = i + 1
+
+            self.time = np.append(self.time, np.array(t))
+            self.tag = np.append(self.tag, np.array(tag))
+            self.f3 = np.append(self.f3, np.array(f3))
+            self.f4 = np.append(self.f4, np.array(f4))
+            self.af3 = np.append(self.af3, np.array(af3))
+            self.af4 = np.append(self.af4, np.array(af4))
+            self.o1 = np.append(self.o1, np.array(o1))
+            self.o2 = np.append(self.o2, np.array(o2))
         except:
-            print 'No encontrado: ' + self.fileName + '.csv'
-            fileToRead.close()
+            print "Archivo no encontrado: "  + self.fileName
 
-        #Los arreglos se transforman a arreglos de numpy, para que sea mas eficiente.
-        self.time = np.append(self.time, np.array(time))
-        self.tag = np.append(self.tag, np.array(tag))
-        self.f3 = np.append(self.f3, np.array(f3))
-        self.f4 = np.append(self.f4, np.array(f4))
-        self.af3 = np.append(self.af3, np.array(af3))
-        self.af4 = np.append(self.af4, np.array(af4))
-
-        
     #Metodo para obtener los datos en bloques de 1 segundo.
     def getBlocksData(self):
         self.blocks = []
@@ -96,6 +88,5 @@ class Reader(object):
             i += 1
         return self.blocks
 
-r = Reader("/home/emotrix/Documents/EMOTRIX/emotrix/2017/user2.csv", ["RELAX", "NOPE"])
+r = Reader("/home/emotrix/Documents/EMOTRIX/emotrix/2017/data.csv", ["F3", "F4", "AF3", "AF4"], ["RELAX", "NOPE"])
 r.readFile()
-print r.getBlocksData()

@@ -5,10 +5,12 @@
 # Autor:        Diego Jacobs    13160
 # **********************************************************************************************************************
 class BlockData(object):
-    def __init__(self, tag="", time=0, f3=[], f4=[], af3=[], af4=[]):
+    def __init__(self, tag="", time=0, f3=[], f4=[], af3=[], af4=[], o1=[], o2=[]):
         self.tag = tag
         self.time = time
         self.f3 = f3
         self.f4 = f4
         self.af3 = af3
         self.af4 = af4
+        self.o1 = o1
+        self.o2 = o2
