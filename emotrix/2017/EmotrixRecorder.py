@@ -50,7 +50,7 @@ class EmotrixRecoder(object):
             for sensor in sensors:
                 row.append(sensor)
                 row.append(sensor + "_Quality")
-            row.append(tag)
+            row.append("Tag")
 
             writer.writerow(row)
 

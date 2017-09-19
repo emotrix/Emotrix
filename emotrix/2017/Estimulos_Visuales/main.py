@@ -21,7 +21,7 @@ import csv
 import thread
 import time
 import sys
-sys.path.insert(0, 'C:/Users/sergio/Documents/universidad/Mega proyecto/Emotrix-master/emokit')
+sys.path.insert(0, '/home/emotrix/Documents/EMOTRIX/emokit')
 
 from emotiv import Emotiv
 import gevent
