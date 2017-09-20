@@ -51,7 +51,7 @@ class EmotrixRecoder(object):
             for sensor in sensors:
                 row.append(sensor)
                 row.append(sensor + "_Quality")
-            row.append(tag)
+            row.append("Tag")
 
             writer.writerow(row)
 
@@ -81,8 +81,8 @@ class EmotrixRecoder(object):
                 except:
                     print "Sensor incorrecto"
                     headset.close()
-
                 row.append(tag)
+                
                 # Se exporta a csv
                 writer.writerow(row)
                 print row
