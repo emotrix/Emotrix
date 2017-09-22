@@ -1,2 +1,6 @@
+blue, relax
+black, relax
+red, relax
+green, relax
 test2.jpg, HAPPY
 test.jpg, SAD

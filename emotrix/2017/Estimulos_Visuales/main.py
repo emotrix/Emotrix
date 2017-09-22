@@ -21,7 +21,8 @@ import csv
 import thread
 import time
 import sys
-sys.path.insert(0, '/home/emotrix/Documents/EMOTRIX/emokit')
+from colour import Color
+sys.path.insert(0, '../../../emokit')
 
 from emotiv import Emotiv
 import gevent
@@ -34,43 +35,47 @@ class ImagePresentation():
 	time_block = 1 #tiempo que dura cada estimulo (intervalos)
 	sensors = ['F3','F4','AF3','AF4','O1','O2']
 	content = []
+	contColors = 0
 	def __init__(self):
 		self.root = tk.Tk()
-		self.root.title('My Pictures')
+		self.root.title('Estimulos visuales')
 		with open('order.txt') as f:
 			self.content = f.readlines()
 		self.content = [x.strip() for x in self.content]
 		content2 = []
 		for line in self.content:
-			line = line.split(',', 1)
+			line = line.replace(" ", "").split(',', 1)
+			if line[1] == 'relax':
+				self.contColors = self.contColors + 1
 			content2.append(line)
 		w = 500
 		h = 500
 		self.content = content2
+		cont = 0
 		for name in self.content:
-			imageFile = name[0]
-			image = Image.open(imageFile)
-			image = image.resize((w, h))
-			self.images.append(ImageTk.PhotoImage(image))
+			if cont >= self.contColors:
+				imageFile = name[0]
+				image = Image.open(imageFile)
+				image = image.resize((w, h))
+				self.images.append(ImageTk.PhotoImage(image))
+			cont = cont + 1
 		x = 0
 		y = 0
 
 		# make the root window the size of the image
 		self.root.geometry("%dx%d+%d+%d" % (w,h, x, y))
 		self.panel1 = tk.Label(self.root, image=self.images[0])
-		self.display = self.images[0]
-		self.panel1.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
+		self.root.configure(background=self.content[0][0])
 		thread.start_new_thread(self.emotiv, ())
 		self.root.mainloop()
-		print "Display image1"
+
 		########EMOTIV###########
 	def emotiv(self):
 		headset = Emotiv()
 		gevent.spawn(headset.setup)
-		#gevent.sleep(0)
 		print("Serial Number: %s" % headset.serial_number)
 
-		self.num_blocks = len(self.images)
+		self.num_blocks = len(self.content)
 		cont_block = 0
 		cont_seconds = 0
 		temp_t = 0
@@ -99,9 +104,18 @@ class ImagePresentation():
 					else:
 						tag = self.content[cont_block][1]
 						#display images
-						self.panel1.configure(image=self.images[cont_block])
-						print "Display: "  + str(cont_block)
-						self.display = self.images[cont_block]
+						if cont_block >= self.contColors :
+							self.panel1.configure(image=self.images[cont_block-self.contColors])
+							print "Display: "  + str(cont_block-self.contColors)
+							self.display = self.images[cont_block-self.contColors]
+							self.panel1.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
+						else:
+							color = Color(self.content[cont_block-1][0])
+							colors = list(color.range_to(Color(self.content[cont_block][0]),1000))
+							for color in colors:
+								self.root.configure(background=color)
+							#self.root.configure(background=self.content[cont_block][0])
+						
 				row = [str(t)]
 				try:
 					for sensor in self.sensors:
