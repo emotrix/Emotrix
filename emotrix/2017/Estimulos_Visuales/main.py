@@ -32,10 +32,12 @@ class ImagePresentation():
 	images = []
 	time = 3000
 	filename='data.csv'
-	time_block = 1 #tiempo que dura cada estimulo (intervalos)
+	time_block = 15 #tiempo que dura cada estimulo (intervalos)
 	sensors = ['F3','F4','AF3','AF4','O1','O2']
 	content = []
 	contColors = 0
+	selectedEmotion = ''
+	difColorSize = 10000
 	def __init__(self):
 		self.root = tk.Tk()
 		self.root.title('Estimulos visuales')
@@ -45,18 +47,18 @@ class ImagePresentation():
 		content2 = []
 		for line in self.content:
 			line = line.replace(" ", "").split(',', 1)
-			if line[1] == 'relax':
+			if line[1] == 'RELAX':
 				self.contColors = self.contColors + 1
 			content2.append(line)
-		w = 500
-		h = 500
+		w = self.root.winfo_screenwidth()
+		h = self.root.winfo_screenheight()
 		self.content = content2
 		cont = 0
 		for name in self.content:
 			if cont >= self.contColors:
 				imageFile = name[0]
 				image = Image.open(imageFile)
-				image = image.resize((w, h))
+				image = image.resize((w,h))
 				self.images.append(ImageTk.PhotoImage(image))
 			cont = cont + 1
 		x = 0
@@ -65,9 +67,22 @@ class ImagePresentation():
 		# make the root window the size of the image
 		self.root.geometry("%dx%d+%d+%d" % (w,h, x, y))
 		self.panel1 = tk.Label(self.root, image=self.images[0])
-		self.root.configure(background=self.content[0][0])
+		self.root.configure(background=Color(self.content[0][0]))
+		self.root.attributes("-fullscreen", True)
 		thread.start_new_thread(self.emotiv, ())
+		thread.start_new_thread(self.selectEmotion, ())
 		self.root.mainloop()
+
+	def selectEmotion(self):
+		while True:
+			self.selectedEmotion = raw_input('Enter your input:')
+			if(self.selectedEmotion == 'a'):
+				self.selectedEmotion = "happy"
+			if(self.selectedEmotion == 's'):
+				self.selectedEmotion = "sad"
+			if(self.selectedEmotion == 'd'):
+				self.selectedEmotion = "other"
+			print self.selectedEmotion
 
 		########EMOTIV###########
 	def emotiv(self):
@@ -82,14 +97,18 @@ class ImagePresentation():
 		tag = self.content[0][1]
 		#Se define el escritor de las lecturas en el archivo CSV
 		writer = csv.writer(open(self.filename, 'w'), delimiter=',', quotechar='"', lineterminator='\n')
-		row = ["Time"]
+		row = ["Image/Color"]
+		row.append("Time")
+		row.append("Exact Time")
 		for sensor in self.sensors:
 			row.append(sensor)
 			row.append(sensor + "_Quality")
-		row.append(tag)
+		row.append("Emotion")
+		row.append("Selected Emotion")
 		writer.writerow(row)
 		try:
 			t0 = time.time()
+			tnow = time.time()
 			while True:
 				t = int(time.time()-t0)
 				if temp_t != t:
@@ -111,12 +130,15 @@ class ImagePresentation():
 							self.panel1.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
 						else:
 							color = Color(self.content[cont_block-1][0])
-							colors = list(color.range_to(Color(self.content[cont_block][0]),1000))
+							colors = list(color.range_to(Color(self.content[cont_block][0]),self.difColorSize))
+							now = time.time()
 							for color in colors:
 								self.root.configure(background=color)
 							#self.root.configure(background=self.content[cont_block][0])
 						
-				row = [str(t)]
+				row = [self.content[cont_block][0]]
+				row.append(str(t))
+				row.append(time.time())
 				try:
 					for sensor in self.sensors:
 						row.append(str(headset.sensors[sensor]['value']))
@@ -125,9 +147,12 @@ class ImagePresentation():
 					print "Sensor incorrecto"
 					headset.close()
 				row.append(tag)
+				row.append(self.selectedEmotion)
+				if self.selectedEmotion != '':
+					self.selectedEmotion = ''
 				# Se exporta a csv
 				writer.writerow(row)
-				print row
+				#print row
 				temp_t = t
 				gevent.sleep(0)
 		except KeyboardInterrupt:
