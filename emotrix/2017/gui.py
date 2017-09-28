@@ -9,7 +9,6 @@ from Tkinter import *
 import ExcelReader
 from visuales.main import *
 from auditivos.gui import *
-from boto.s3.connection import S3Connection
 
 #conn = S3Connection('AKIAISNVTEZ2QBHC63SQ','PY+kp0lOkkoIRZ4serAhWmlUWarll6W4ALKK9RDG')
 #bucket = conn.get_bucket('music-emotions')
