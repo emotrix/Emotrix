@@ -6,20 +6,18 @@ Created on Tue Sep 26 01:18:38 2017
 """
 
 import Tkinter as tk
-import csv
-import thread
-import time
-import sys
-import os
+import csv, thread, time, sys, os, gevent
+import pyglet
+pyglet.lib.load_library('avbin')
+pyglet.have_avbin=True
 #sys.path.insert(0, '/EMOTRIX/emokit')
 
 #from emotiv import Emotiv
-import gevent
-from pydub import AudioSegment
 
 class AudioPresentation():
     p = 0
     sounds = []
+    index = 0
     time = 3000
     filename='data.csv'
     time_block = 5 #tiempo que dura cada estimulo (intervalos)
@@ -35,18 +33,21 @@ class AudioPresentation():
             for line in self.content:
                 line = line.split(',', 1)
                 content2.append(line)
-            w = 500
-            h = 500
             self.content = content2
             cwd = os.getcwd()
-            print cwd
+            player = pyglet.media.Player()
             for name in self.content:
                 soundFile = name[0]
+                #f = open(soundFile)
+                print soundFile
+                song = pyglet.media.StaticSource(pyglet.media.load(soundFile))
+                player.queue(song)
+                #self.sounds.append(soundFile) 
                 emotion = name[1]
                 extension = self.getAudioExtension(soundFile)
                # print str(soundFile)
-                song = AudioSegment.from_mp3("/2017/auditivos/Papa_nana.mp3")
-                #self.sounds.append(song)
+            player.play()
+            player.seek(62)
             x = 0
             y = 0
 
