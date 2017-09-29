@@ -12,7 +12,6 @@
 # Proposito:    
 # Autor:		Sergio Gomez    
 # ************************************************************************
-
 import Tkinter as tk
 from PIL import Image, ImageTk
 from ttk import Frame, Button, Style
@@ -22,6 +21,7 @@ import thread
 import time
 import sys
 from colour import Color
+from msvcrt import getch
 sys.path.insert(0, '../../../emokit')
 
 from emotiv import Emotiv
@@ -58,7 +58,7 @@ class ImagePresentation():
 			if cont >= self.contColors:
 				imageFile = name[0]
 				image = Image.open(imageFile)
-				image = image.resize((w,h))
+				image = image.resize((w-200,h))
 				self.images.append(ImageTk.PhotoImage(image))
 			cont = cont + 1
 		x = 0
@@ -75,7 +75,7 @@ class ImagePresentation():
 
 	def selectEmotion(self):
 		while True:
-			self.selectedEmotion = raw_input('Enter your input:')
+			self.selectedEmotion = getch()
 			if(self.selectedEmotion == 'a'):
 				self.selectedEmotion = "happy"
 			if(self.selectedEmotion == 's'):
@@ -124,6 +124,7 @@ class ImagePresentation():
 						tag = self.content[cont_block][1]
 						#display images
 						if cont_block >= self.contColors :
+							self.time_block = 5
 							self.panel1.configure(image=self.images[cont_block-self.contColors])
 							print "Display: "  + str(cont_block-self.contColors)
 							self.display = self.images[cont_block-self.contColors]
