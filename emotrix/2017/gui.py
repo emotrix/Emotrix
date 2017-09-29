@@ -6,8 +6,7 @@ Created on Tue Sep 19 19:00:52 2017
 """
 
 from Tkinter import *
-import ExcelReader
-from visuales.main import *
+from Estimulos_Visuales.main import *
 from auditivos.gui import *
 
 class Application(Frame):
@@ -49,24 +48,11 @@ class Application(Frame):
         self.AuralGUI = Button(self,text="Estimulos Auditivos",command=self.auralGUI)
         self.AuralGUI.grid(row=8,column=1)
         
-    def visualGUI(self):
-        app = ImagePresentation()
+"""    def visualGUI(self):
+        app = ImagePresentation()"""
     def auralGUI(self):
         app = AudioPresentation()
         
-        """self.QUIT = Button(self)
-        self.QUIT["text"] = "QUIT"
-        self.QUIT["fg"]   = "red"
-        self.QUIT["command"] =  self.quit
-
-        self.QUIT.pack({"side": "left"})
-
-        self.hi_there = Button(self)
-        self.hi_there["text"] = "Hello",
-        self.hi_there["command"] = self.say_hi
-
-        self.hi_there.pack({"side": "left"})"""
-
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.pack()
