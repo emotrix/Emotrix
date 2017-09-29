@@ -49,6 +49,8 @@ class ImagePresentation():
 			line = line.replace(" ", "").split(',', 1)
 			if line[1] == 'RELAX':
 				self.contColors = self.contColors + 1
+				if(self.contColors < 8):
+					line[1] = 'NON-RELAX'
 			content2.append(line)
 		w = self.root.winfo_screenwidth()
 		h = self.root.winfo_screenheight()
