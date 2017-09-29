@@ -81,4 +81,8 @@ Persona17_feliz.jpg, FELIZ
 Persona17_ira.jpg, IRA 
 Persona17_neutro.jpg, NEUTRO 
 Persona17_sorpresa.jpg, SORPRESA 
+<<<<<<< HEAD
 Persona17_triste.jpg, TRISTE    
+=======
+Persona17_triste.jpg, TRISTE    
+>>>>>>> 38d73a49460f3770d396e49124b7c18193d271bc
