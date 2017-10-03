@@ -44,7 +44,7 @@ class EmotrixRecoder(object):
         tag = self.sequence[0]
 
         #Se define el escritor de las lecturas en el archivo CSV
-        writer = csv.writer(open(self.filename, 'w'), delimiter=',', quotechar='"', lineterminator='\n') #windows
+        # writer = csv.writer(open(self.filename, 'w'), delimiter=',', quotechar='"', lineterminator='\n') #windows
         writer = csv.writer(open(self.filename, 'w'), delimiter=',', quotechar='"') #linux
         try:
             row = ["Time"]
