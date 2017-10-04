@@ -70,7 +70,7 @@ def getMatrix():
                               discoveryServiceUrl=discoveryUrl)
 
     spreadsheetId = '1SOoV7NBQXX4aZqUdxs7WOP9MNtYkgoO3xU1fjXz-1BM'
-    rangeName = 'Hoja 1!A1:G46'
+    rangeName = 'Hoja 1!A1:G52'
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])

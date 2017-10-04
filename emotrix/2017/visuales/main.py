@@ -113,7 +113,6 @@ class ImagePresentation():
 				t = int(time.time()-t0)
 				if temp_t != t:
 					cont_seconds += 1
-
 				if cont_seconds > self.time_block:
 					cont_seconds = 0
 					cont_block += 1
