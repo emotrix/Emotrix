@@ -1,3 +1,4 @@
+install.packages("readr")
 install.packages("wavelets")
 library(wavelets)
 

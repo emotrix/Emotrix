@@ -7,16 +7,23 @@ library(data.table)
 
 setwd("~/Documents/Emotrix/emotrix/2017/Data")
 
-alvaro_galindo <- read_csv("alvaro_galindo.csv",col_types = cols(`Exact Time` = col_double()))
-DT <- data.table(alvaro_galindo)
+folder <- "Selected-Emotions"
 
-first_second_emotions <- 224
+files <- list.files(path="~/Documents/Emotrix/emotrix/2017/Data", pattern="csv$", full.names=FALSE, recursive=FALSE)
 
-images <-unique(DT[Emotion != "NON-RELAX"  & Emotion != "RELAX", c("Image/Color", "Time")])
-emotions <- DT[Emotion != "NON-RELAX"  & Emotion != "RELAX" & `Selected Emotion` != "NA"]
-table <- emotions[, c("Image/Color", "Time", "Emotion", "Selected Emotion")]
-
-final_table <- merge(images, table, all.x=TRUE)
-
-table_order <- final_table[order(final_table$Time)]
-fwrite(table_order, "alvaro_galindo_emotions.csv")
+for(i in 1:length(files)){
+  csv <- read_csv(files[i], col_types = cols(`Exact Time` = col_double()))
+  DT <- data.table(csv)
+  remove(csv)
+  
+  images <-unique(DT[Emotion != "NON-RELAX"  & Emotion != "RELAX", c("Image/Color", "Time")])
+  emotions <- DT[Emotion != "NON-RELAX"  & Emotion != "RELAX" & `Selected Emotion` != "NA"]
+  table <- emotions[, c("Image/Color", "Time", "Emotion", "Selected Emotion")]
+  
+  final_table <- merge(images, table, all.x=TRUE)
+  
+  table_order <- unique(final_table[order(final_table$Time)])
+  
+  dir.create(folder, showWarnings = FALSE)
+  write.csv(table_order, file.path(folder, files[i]), row.names=FALSE)
+}
