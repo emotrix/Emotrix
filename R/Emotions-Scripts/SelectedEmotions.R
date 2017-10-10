@@ -14,7 +14,6 @@ files <- list.files(path="~/Documents/Emotrix/emotrix/2017/Data", pattern="csv$"
 for(i in 1:length(files)){
   csv <- read_csv(files[i], col_types = cols(`Exact Time` = col_double()))
   DT <- data.table(csv)
-  remove(csv)
   
   images <-unique(DT[Emotion != "NON-RELAX"  & Emotion != "RELAX", c("Image/Color", "Time")])
   emotions <- DT[Emotion != "NON-RELAX"  & Emotion != "RELAX" & `Selected Emotion` != "NA"]
@@ -27,3 +26,11 @@ for(i in 1:length(files)){
   dir.create(folder, showWarnings = FALSE)
   write.csv(table_order, file.path(folder, files[i]), row.names=FALSE)
 }
+
+remove(csv)
+remove(DT)
+remove(images)
+remove(emotions)
+remove(table)
+remove(final_table)
+remove(table_order)
