@@ -11,7 +11,7 @@ setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
 
 
 csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
-csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
+csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX" & csv$Time == 224),]
 
 #arguments
 # n: filter order
@@ -35,9 +35,9 @@ wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALS
 
 #Grafica de la lectura de un electrodo
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
-DT <- data.table(csv2)
-graph <- DT[, list(cantidad = mean(F3)), by='Time']
-plot(graph$Time, graph$intensidad, type='l')
+DT <- data.table(f3)
+graph <- DT[, list(cantidad = mean(F4)), by='Time']
+plot(f4, type='l')
 
 #Cantidad de valores distintos por segundo
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
