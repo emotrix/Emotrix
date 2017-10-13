@@ -7,12 +7,39 @@ library(wavelets)
 library(data.table)
 library(signal)
 
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
+# setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
+setwd("C:/Users/mario/Desktop/resultados")
+
 
 
 csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
-csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
+# csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
+csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
 
+
+#---------------------------------------------------
+#PLAN B, tomar 30 muestras por segundo
+time <- csv2$Time
+unicotime <- unique(time)
+
+remove(csv)
+datafinal <- data.frame(NA,NA)
+tempdata <- data.frame(rep(NA,30),rep(NA,30))
+colnames(tempdata) <- c("Time","Frequency")
+colnames(datafinal) <- c("Time","Frequency")
+for (i in 0:nrow(as.data.frame(unicotime))){
+  print(i)
+  temp <- csv2[(csv2$Time == i),]
+  unicafrec <- temp$O1
+  filtered <- sample(unicafrec, 30)
+  tempdata$Time = rep(i,30)
+  tempdata$Frequency = filtered
+  datafinal <- rbind(datafinal, tempdata)
+}
+datafinal <- na.omit(datafinal)
+# --------------------------------------------------
+
+#LOW PASS FILTER 
 #arguments
 # n: filter order
 # W: (low, high) / Nyquist Frequency
@@ -29,7 +56,19 @@ o2 <- filter(bf,csv2$O2)
 
 m <- cbind(f3,af3, f4, af4, o1, o2)
 
+remove(csv)
+
 wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
+View(wt@V$V1)
+
+#GRAFICAS
+plot(f3, type="l")
+plot(f3,csv2$Time, col="blue", type="l")
+plot(wt@W$W1)
+plot(wt@W$W2)
+plot(wt@W$W3)
+plot(wt@W$W4)
+
 
 
 
@@ -46,12 +85,3 @@ graph <- DT[, list(cantidad = length(unique(F3))), by='Time']
 
 remove(csv)
 remove(csv2)
-remove(m_f3)
-remove(m)
-remove(wt)
-remove(m_f3)
-remove(m_af3)
-remove(m_f4)
-remove(m_af4)
-remove(m_o1)
-remove(m_o2)
