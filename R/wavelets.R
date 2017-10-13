@@ -13,6 +13,26 @@ setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
 csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
 
+#arguments
+# n: filter order
+# W: (low, high) / Nyquist Frequency
+# type: Pass Band
+# plane: analog filter
+bf <- butter(n=1,W=c(0.1, 30)/1024, type="pass",plane="s")
+
+f3 <- filter(bf,csv2$F3)
+f4 <- filter(bf,csv2$F4)
+af3 <- filter(bf,csv2$AF3)
+af4 <- filter(bf,csv2$AF4)
+o1 <- filter(bf,csv2$O1)
+o2 <- filter(bf,csv2$O2)
+
+m <- cbind(f3,af3, f4, af4, o1, o2)
+
+wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
+
+
+
 #Grafica de la lectura de un electrodo
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
 DT <- data.table(csv2)
@@ -21,20 +41,8 @@ plot(graph$Time, graph$intensidad, type='l')
 
 #Cantidad de valores distintos por segundo
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
-DT <- data.table(csv2)
+DT <- data.table(csv)
 graph <- DT[, list(cantidad = length(unique(F3))), by='Time']
-
-
-m_f3 <- as.matrix(csv3$F3)
-m_af3 <- as.matrix(csv3$AF3)
-m_af4 <- as.matrix(csv3$AF4)
-m_f4 <- as.matrix(csv3$F4)
-m_o1 <- as.matrix(csv3$O2)
-m_o2 <- as.matrix(csv3$O1)
-
-m <- cbind(m_f3, m_af3, m_f4, m_af4, m_o1, m_o2)
-
-wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
 
 remove(csv)
 remove(csv2)
