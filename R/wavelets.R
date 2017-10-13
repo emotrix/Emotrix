@@ -7,12 +7,16 @@ library(wavelets)
 library(data.table)
 library(signal)
 
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
+# setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
+setwd("C:/Users/mario/Desktop/resultados")
+
 
 
 csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
-csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX" & csv$Time == 224),]
+# csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
+csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
 
+#LOW PASS FILTER 
 #arguments
 # n: filter order
 # W: (low, high) / Nyquist Frequency
@@ -29,7 +33,19 @@ o2 <- filter(bf,csv2$O2)
 
 m <- cbind(f3,af3, f4, af4, o1, o2)
 
+remove(csv)
+
 wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
+View(wt@V$V1)
+
+#GRAFICAS
+plot(f3, type="l")
+plot(f3,csv2$Time, col="blue", type="l")
+plot(wt@W$W1)
+plot(wt@W$W2)
+plot(wt@W$W3)
+plot(wt@W$W4)
+
 
 
 
@@ -46,12 +62,3 @@ graph <- DT[, list(cantidad = length(unique(F3))), by='Time']
 
 remove(csv)
 remove(csv2)
-remove(m_f3)
-remove(m)
-remove(wt)
-remove(m_f3)
-remove(m_af3)
-remove(m_f4)
-remove(m_af4)
-remove(m_o1)
-remove(m_o2)
