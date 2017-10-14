@@ -7,14 +7,15 @@ library(wavelets)
 library(data.table)
 library(signal)
 
-# setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
-setwd("C:/Users/mario/Desktop/resultados")
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
+#setwd("C:/Users/mario/Desktop/resultados")
 
 
 
 csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
-# csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
-csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
+csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
+#csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
+
 
 #LOW PASS FILTER 
 #arguments
@@ -35,6 +36,7 @@ m <- cbind(f3,af3, f4, af4, o1, o2)
 
 remove(csv)
 
+
 wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
 View(wt@V$V1)
 
@@ -45,9 +47,6 @@ plot(wt@W$W1)
 plot(wt@W$W2)
 plot(wt@W$W3)
 plot(wt@W$W4)
-
-
-
 
 #Grafica de la lectura de un electrodo
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]

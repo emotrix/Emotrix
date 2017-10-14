@@ -1,4 +1,6 @@
 #Script para obtener emociones presionadas por cada persona
+# Diego Jacobs - 13160
+
 install.packages("readr")
 install.packages("data.table")
 
@@ -46,3 +48,6 @@ remove(final_table)
 remove(table_order)
 remove(folder)
 remove(files)
+remove(i)
+
+print("Done")
