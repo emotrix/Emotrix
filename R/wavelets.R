@@ -17,7 +17,7 @@ csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
 #csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
 
 
-#LOW PASS FILTER 
+#BAND PASS FILTER 
 #arguments
 # n: filter order
 # W: (low, high) / Nyquist Frequency
@@ -37,7 +37,11 @@ m <- cbind(f3,af3, f4, af4, o1, o2)
 remove(csv)
 
 
-wt <- dwt(as.numeric(m), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
+wt <- dwt(as.numeric(f3), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
+
+
+plot.dwt(wt, levels = 4)
+
 View(wt@V$V1)
 
 #GRAFICAS
@@ -49,10 +53,12 @@ plot(wt@W$W3)
 plot(wt@W$W4)
 
 #Grafica de la lectura de un electrodo
-csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
-DT <- data.table(f3)
-graph <- DT[, list(cantidad = mean(F4)), by='Time']
+plot(f3, type='l')
 plot(f4, type='l')
+plot(af3, type='l')
+plot(af4, type='l')
+plot(o1, type='l')
+plot(o2, type='l')
 
 #Cantidad de valores distintos por segundo
 csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
