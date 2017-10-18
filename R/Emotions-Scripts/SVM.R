@@ -1,6 +1,10 @@
 install.packages("e1071")
+install.packages("caret")
+install.packages("lava")
 
 library("e1071")
+library(caret)
+
 
 head(iris,5)
 
@@ -16,3 +20,4 @@ pred <- predict(svm_model,x)
 system.time(pred <- predict(svm_model,x))
 
 table(pred,y)
+
