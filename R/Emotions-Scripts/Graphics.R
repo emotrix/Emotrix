@@ -49,21 +49,21 @@ for(i in 1:length(files)){
       f3_alfa <- mean(as.numeric(wt_f3@W$W3))
       f3_beta <- mean(as.numeric(wt_f3@W$W4))
       
-      max_f3 <- max(f3_delta, f3_theta, f3_alfa, f3_beta)
+      max <- max(f3_delta, f3_theta, f3_alfa, f3_beta)
       
-      if(f3_delta == max_f3){
+      if(f3_delta == max){
         array_f3[j] <- 1
       }
       
-      if(f3_theta == max_f3){
+      if(f3_theta == max){
         array_f3[j] <- 2
       }
       
-      if(f3_alfa == max_f3){
+      if(f3_alfa == max){
         array_f3[j] <- 3
       }
       
-      if(f3_beta == max_f3){
+      if(f3_beta == max){
         array_f3[j] <- 4
       }  
     }, warning = function(w) {
@@ -78,8 +78,10 @@ for(i in 1:length(files)){
   image_name <-  paste(file_name, ".png") 
   image_path  <- paste("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Graphics-Emotions/F3/", image_name)
   png(filename=image_path)
-  plot(array_f3,xlab = "Tiempo", ylab = "Onda Mas Presente", col="blue", main="Lectura de Electrodo F3")
+  title <- paste(file_name," - Lectura de Electrodo F3")
+  plot(array_f3,xlab = "Tiempo", ylab = "Onda Mas Presente", col="blue", main=title)
   dev.off()
+  print(file_name)
 }
 
 remove(csv)
@@ -100,4 +102,11 @@ remove(image_path)
 remove(initial_time)
 remove(j)
 remove(max)
-remove(max_f3)
+remove(result)
+remove(title)
+remove(wt_af3)
+remove(wt_af4)
+remove(wt_f3)
+remove(wt_f4)
+remove(wt_o1)
+remove(wt_o2)
