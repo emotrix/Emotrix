@@ -6,7 +6,7 @@ library(signal)
 setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data")
 
 files <- list.files(path="D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data", pattern="csv$", full.names=FALSE, recursive=FALSE)
-folder <- "Tiempos-Alpha/AF4"
+folder <- "Tiempos-Alpha/F3"
 #BAND PASS FILTER 
 #arguments
 # n: filter order
@@ -44,10 +44,10 @@ for(i in 1:length(files)){
       wt_o1 <- dwt(as.numeric(second_dt$O1), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
       wt_o2 <- dwt(as.numeric(second_dt$O2), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
       
-      f3_delta <- mean(as.numeric(wt_af4@W$W1))
-      f3_theta <- mean(as.numeric(wt_af4@W$W2))
-      f3_alfa <- mean(as.numeric(wt_af4@W$W3))
-      f3_beta <- mean(as.numeric(wt_af4@W$W4))
+      f3_delta <- mean(as.numeric(wt_f3@W$W1))
+      f3_theta <- mean(as.numeric(wt_f3@W$W2))
+      f3_alfa <- mean(as.numeric(wt_f3@W$W3))
+      f3_beta <- mean(as.numeric(wt_f3@W$W4))
       
       max <- max(f3_delta, f3_theta, f3_alfa, f3_beta)
       
