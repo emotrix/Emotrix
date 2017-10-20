@@ -19,16 +19,16 @@ csv_cross_sad <- csv_cross_sad[ , !(names(csv_cross_sad) %in% drops)]
 csv_happy$ID <- 1
 csv_sad$ID <- 0
 
-training <- rbind(csv_happy, csv_sad)
+training_hs <- rbind(csv_happy, csv_sad)
 
-modelo_lr_hs<-glm(ID~., data=training, family=binomial())
+modelo_lr_hs<-glm(ID~., data=training_hs, family=binomial())
 
 csv_cross_happy$ID <- 1
 csv_cross_sad$ID <- 0
 
-test <- rbind(csv_cross_happy, csv_cross_sad)
+test_hs <- rbind(csv_cross_happy, csv_cross_sad)
 
-final <- predict(modelo_lr_hs, test, type="response")
+final_hs <- predict(modelo_lr_hs, test_hs, type="response")
 
 
 #Happy vs Other
@@ -46,16 +46,16 @@ csv_cross_other <- csv_cross_other[ , !(names(csv_cross_other) %in% drops)]
 csv_happy$ID <- 1
 csv_other$ID <- 0
 
-training <- rbind(csv_happy, csv_other)
+training_ho <- rbind(csv_happy, csv_other)
 
-modelo_lr_ho<-glm(ID~., data=training, family=binomial())
+modelo_lr_ho<-glm(ID~., data=training_ho, family=binomial())
 
 csv_cross_happy$ID <- 1
 csv_cross_other$ID <- 0
 
-test <- rbind(csv_cross_happy, csv_cross_other)
+test_ho <- rbind(csv_cross_happy, csv_cross_other)
 
-final <- predict(modelo_lr_ho, test, type="response")
+final_ho <- predict(modelo_lr_ho, test_ho, type="response")
 
 #Other vs Sad
 csv_sad <- read_csv("Training-Sad.csv")
@@ -72,13 +72,13 @@ csv_cross_sad <- csv_cross_sad[ , !(names(csv_cross_sad) %in% drops)]
 csv_sad$ID <- 1
 csv_other$ID <- 0
 
-training <- rbind(csv_sad, csv_other)
+training_so <- rbind(csv_sad, csv_other)
 
-modelo_lr_so<-glm(ID~., data=training, family=binomial())
+modelo_lr_so<-glm(ID~., data=training_so, family=binomial())
 
 csv_cross_sad$ID <- 1
 csv_cross_other$ID <- 0
 
-test <- rbind(csv_cross_sad, csv_cross_other)
+test_so <- rbind(csv_cross_sad, csv_cross_other)
 
-final <- predict(modelo_lr_so, test, type="response")
+final_so <- predict(modelo_lr_so, test_so, type="response")
