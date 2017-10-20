@@ -1,7 +1,28 @@
-install.packages("caret")
+#Diego Jacobs - 13160
+install.packages("e1071")
 
-library(caret)
+library("e1071")
 
+#Example
+head(iris,5)
+
+attach(iris)
+
+x <- subset(iris, select=-Species)
+y <- Species
+
+svm_model <- svm(Species ~ ., data=iris)
+summary(svm_model)
+
+pred <- predict(svm_model,x)
+system.time(pred <- predict(svm_model,x))
+
+table(pred,y)
+
+
+
+
+#Emotrix
 setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas")
 
 #Happy vs Sad
@@ -95,4 +116,3 @@ pred_so <- predict(svm_model_so, test_so)
 
 y_so <- test_so$ID
 table(pred_so, y_so)
-
