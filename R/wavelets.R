@@ -11,12 +11,6 @@ setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data")
 #setwd("C:/Users/mario/Desktop/resultados")
 
 
-
-csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
-csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
-#csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
-
-
 #BAND PASS FILTER 
 #arguments
 # n: filter order
@@ -24,6 +18,14 @@ csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
 # type: Pass Band
 # plane: analog filter
 bf <- butter(n=1,W=c(0.1, 30)/1024, type="pass",plane="s")
+
+
+csv <- read_csv("17M2311.csv", col_types = cols(`Exact Time` = col_double()))
+csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
+#csv2 <- csv[(csv$Emotion == "NON-RELAX" | csv$Emotion == "RELAX"),]
+
+
+
 
 f3 <- filter(bf,csv2$F3)
 f4 <- filter(bf,csv2$F4)
@@ -39,31 +41,6 @@ remove(csv)
 
 wt <- dwt(as.numeric(f3), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
 
-
-plot.dwt(wt, levels = 4)
-
-View(wt@V$V1)
-
-#GRAFICAS
-plot(f3, type="l")
-plot(f3,csv2$Time, col="blue", type="l")
-plot(wt@W$W1)
-plot(wt@W$W2)
-plot(wt@W$W3)
-plot(wt@W$W4)
-
-#Grafica de la lectura de un electrodo
-plot(f3, type='l')
-plot(f4, type='l')
-plot(af3, type='l')
-plot(af4, type='l')
-plot(o1, type='l')
-plot(o2, type='l')
-
-#Cantidad de valores distintos por segundo
-csv2 <- csv[(csv$Emotion != "NON-RELAX" & csv$Emotion != "RELAX"),]
-DT <- data.table(csv)
-graph <- DT[, list(cantidad = length(unique(F3))), by='Time']
 
 remove(csv)
 remove(csv2)

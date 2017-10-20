@@ -1,3 +1,4 @@
+#Diego Jacobs - 13160
 library(readr)
 library(wavelets)
 library(data.table)
