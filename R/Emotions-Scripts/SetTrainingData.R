@@ -40,11 +40,11 @@ for(i in 1:length(files)){
     if(count_happy < count_training){
       for(j in 1:nrow(table)) {
         if(count_happy == count_training){
-          temp <- cbind(count_co_happy, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+          temp <- cbind(count_co_happy, DT[Time == table[j]$Time])
           co_happy_table <- rbind(co_happy_table, temp)
           count_co_happy <- count_co_happy + 1
         } else{
-          temp <- cbind(count_happy, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+          temp <- cbind(count_happy, DT[Time == table[j]$Time])
           happy_table <- rbind(happy_table, temp)
           count_happy <- count_happy + 1
         }
@@ -52,7 +52,7 @@ for(i in 1:length(files)){
     } else {
       
       for(j in 1:nrow(table)) {
-        temp <- cbind(count_co_happy, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+        temp <- cbind(count_co_happy, DT[Time == table[j]$Time])
         co_happy_table <- rbind(co_happy_table, temp)
         count_co_happy <- count_co_happy + 1
       }
@@ -66,11 +66,11 @@ for(i in 1:length(files)){
       
       for(j in 1:nrow(table)) {
         if(count_sad == count_training){
-          temp <- cbind(count_co_sad, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+          temp <- cbind(count_co_sad, DT[Time == table[j]$Time])
           co_sad_table <- rbind(co_sad_table, temp)
           count_co_sad <- count_co_sad + 1
         } else{
-          temp <- cbind(count_sad, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+          temp <- cbind(count_sad, DT[Time == table[j]$Time])
           sad_table <- rbind(sad_table, temp)
           count_sad <- count_sad + 1
         }
@@ -78,7 +78,7 @@ for(i in 1:length(files)){
     } else {
       
       for(j in 1:nrow(table)) {
-        temp <- cbind(count_co_sad, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+        temp <- cbind(count_co_sad, DT[Time == table[j]$Time])
         co_sad_table <- rbind(co_sad_table, temp)
         count_co_sad <- count_co_sad + 1
       }
@@ -92,11 +92,11 @@ for(i in 1:length(files)){
       
       for(j in 1:nrow(table)) {
         if(count_other == count_training){
-          temp <- cbind(count_co_other, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+          temp <- cbind(count_co_other, DT[Time == table[j]$Time])
           co_other_table <- rbind(co_other_table, temp)
           count_co_other <- count_co_other + 1
         } else{
-          temp <- cbind(count_other, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+          temp <- cbind(count_other, DT[Time == table[j]$Time])
           other_table <- rbind(other_table, temp)
           count_other <- count_other + 1
         }
@@ -104,7 +104,7 @@ for(i in 1:length(files)){
     } else {
       
       for(j in 1:nrow(table)) {
-        temp <- cbind(count_co_other, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+        temp <- cbind(count_co_other, DT[Time == table[j]$Time])
         co_other_table <- rbind(co_other_table, temp)
         count_co_other <- count_co_other + 1
       }
@@ -113,28 +113,28 @@ for(i in 1:length(files)){
   
 }
 
-folder <- "Training-Data"
+folder <- "Training-Data-1s"
 
 dir.create(folder, showWarnings = FALSE)
-write.csv(happy_table, file.path(folder, "Happy-Training.csv"), row.names=FALSE)
+write.csv(happy_table, file.path(folder, "Training-Happy.csv"), row.names=FALSE)
 
 dir.create(folder, showWarnings = FALSE)
-write.csv(other_table, file.path(folder, "Other-Training.csv"), row.names=FALSE)
+write.csv(other_table, file.path(folder, "Training-Other.csv"), row.names=FALSE)
 
 dir.create(folder, showWarnings = FALSE)
-write.csv(sad_table, file.path(folder, "Sad-Training.csv"), row.names=FALSE)
+write.csv(sad_table, file.path(folder, "Training-Sad.csv"), row.names=FALSE)
 
 dir.create(folder, showWarnings = FALSE)
-write.csv(co_happy_table, file.path(folder, "Happy-Cross.csv"), row.names=FALSE)
+write.csv(co_happy_table, file.path(folder, "Cross-Happy.csv"), row.names=FALSE)
 
 dir.create(folder, showWarnings = FALSE)
-write.csv(co_other_table, file.path(folder, "Other-Cross.csv"), row.names=FALSE)
+write.csv(co_other_table, file.path(folder, "Cross-Other.csv"), row.names=FALSE)
 
 dir.create(folder, showWarnings = FALSE)
-write.csv(co_sad_table, file.path(folder, "Sad-Cross.csv"), row.names=FALSE)
+write.csv(co_sad_table, file.path(folder, "Cross-Sad.csv"), row.names=FALSE)
 
 
-
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data")
 #Generar las caracteristicas para entrenar algoritmos por electrodo
 #Media y Desviacion Estandard
 #Ondas Alfa, Beta, Delta y Theta
@@ -146,7 +146,7 @@ dwf <- data.frame(matrix(, nrow = 0,ncol = 10))
 # W: (low, high) / Nyquist Frequency
 # type: Pass Band
 # plane: analog filter
-bf <- butter(n=1,W=c(0.1, 30)/1024, type="pass",plane="s")
+bf <- butter(n=1,W=c(8, 14)/1024, type="pass",plane="s")
 
 for(i in 1:max_count){
   observation <- co_other_table[co_other_table$count_co_other == i]
@@ -165,72 +165,80 @@ for(i in 1:max_count){
     o2 <- filter(bf, DT$O2)
     
     result = tryCatch({
-      wt_f3 <- dwt(as.numeric(f3), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
-      wt_f4 <- dwt(as.numeric(f4), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
-      wt_af3 <- dwt(as.numeric(af3), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
-      wt_af4 <- dwt(as.numeric(af4), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
-      wt_o1 <- dwt(as.numeric(o1), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
-      wt_o2 <- dwt(as.numeric(o2), filter='d4', n.levels=4, boundary="periodic", fast=FALSE)
+      wt_f3 <- dwt(as.numeric(f3), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
+      wt_f4 <- dwt(as.numeric(f4), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
+      wt_af3 <- dwt(as.numeric(af3), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
+      wt_af4 <- dwt(as.numeric(af4), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
+      wt_o1 <- dwt(as.numeric(o1), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
+      wt_o2 <- dwt(as.numeric(o2), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
       
-      mean_delta_f3 <- mean(as.numeric(wt_f3@V$V1))
-      mean_theta_f3 <- mean(as.numeric(wt_f3@V$V2))
-      mean_alfa_f3 <- mean(as.numeric(wt_f3@V$V3))
-      mean_beta_f3 <- mean(as.numeric(wt_f3@V$V4))
-      sd_delta_f3 <- sd(as.numeric(wt_f3@V$V1))
-      sd_theta_f3 <- sd(as.numeric(wt_f3@V$V2))
-      sd_alfa_f3 <- sd(as.numeric(wt_f3@V$V3))
-      sd_beta_f3 <- sd(as.numeric(wt_f3@V$V4))
+      mean_delta_f3 <- mean(as.numeric(wt_f3@W$W1))
+      # mean_theta_f3 <- mean(as.numeric(wt_f3@V$V2))
+      # mean_alfa_f3 <- mean(as.numeric(wt_f3@V$V3))
+      # mean_beta_f3 <- mean(as.numeric(wt_f3@V$V4))
+      sd_delta_f3 <- sd(as.numeric(wt_f3@W$W1))
+      # sd_theta_f3 <- sd(as.numeric(wt_f3@V$V2))
+      # sd_alfa_f3 <- sd(as.numeric(wt_f3@V$V3))
+      # sd_beta_f3 <- sd(as.numeric(wt_f3@V$V4))
       
-      mean_delta_f4 <- mean(as.numeric(wt_f4@V$V1))
-      mean_theta_f4 <- mean(as.numeric(wt_f4@V$V2))
-      mean_alfa_f4 <- mean(as.numeric(wt_f4@V$V3))
-      mean_beta_f4 <- mean(as.numeric(wt_f4@V$V4))
-      sd_delta_f4 <- sd(as.numeric(wt_f4@V$V1))
-      sd_theta_f4 <- sd(as.numeric(wt_f4@V$V2))
-      sd_alfa_f4 <- sd(as.numeric(wt_f4@V$V3))
-      sd_beta_f4 <- sd(as.numeric(wt_f4@V$V4))
+      mean_delta_f4 <- mean(as.numeric(wt_f4@W$W1))
+      # mean_theta_f4 <- mean(as.numeric(wt_f4@V$V2))
+      # mean_alfa_f4 <- mean(as.numeric(wt_f4@V$V3))
+      # mean_beta_f4 <- mean(as.numeric(wt_f4@V$V4))
+      sd_delta_f4 <- sd(as.numeric(wt_f4@W$W1))
+      # sd_theta_f4 <- sd(as.numeric(wt_f4@V$V2))
+      # sd_alfa_f4 <- sd(as.numeric(wt_f4@V$V3))
+      # sd_beta_f4 <- sd(as.numeric(wt_f4@V$V4))
       
-      mean_delta_af3 <- mean(as.numeric(wt_af3@V$V1))
-      mean_theta_af3 <- mean(as.numeric(wt_af3@V$V2))
-      mean_alfa_af3 <- mean(as.numeric(wt_af3@V$V3))
-      mean_beta_af3 <- mean(as.numeric(wt_af3@V$V4))
-      sd_delta_af3 <- sd(as.numeric(wt_af3@V$V1))
-      sd_theta_af3 <- sd(as.numeric(wt_af3@V$V2))
-      sd_alfa_af3 <- sd(as.numeric(wt_af3@V$V3))
-      sd_beta_af3 <- sd(as.numeric(wt_af3@V$V4))
+      mean_delta_af3 <- mean(as.numeric(wt_af3@W$W1))
+      # mean_theta_af3 <- mean(as.numeric(wt_af3@V$V2))
+      # mean_alfa_af3 <- mean(as.numeric(wt_af3@V$V3))
+      # mean_beta_af3 <- mean(as.numeric(wt_af3@V$V4))
+      sd_delta_af3 <- sd(as.numeric(wt_af3@W$W1))
+      # sd_theta_af3 <- sd(as.numeric(wt_af3@V$V2))
+      # sd_alfa_af3 <- sd(as.numeric(wt_af3@V$V3))
+      # sd_beta_af3 <- sd(as.numeric(wt_af3@V$V4))
       
-      mean_delta_af4 <- mean(as.numeric(wt_af4@V$V1))
-      mean_theta_af4 <- mean(as.numeric(wt_af4@V$V2))
-      mean_alfa_af4 <- mean(as.numeric(wt_af4@V$V3))
-      mean_beta_af4 <- mean(as.numeric(wt_af4@V$V4))
-      sd_delta_af4 <- sd(as.numeric(wt_af4@V$V1))
-      sd_theta_af4 <- sd(as.numeric(wt_af4@V$V2))
-      sd_alfa_af4 <- sd(as.numeric(wt_af4@V$V3))
-      sd_beta_af4 <- sd(as.numeric(wt_af4@V$V4))
+      mean_delta_af4 <- mean(as.numeric(wt_af4@W$W1))
+      # mean_theta_af4 <- mean(as.numeric(wt_af4@V$V2))
+      # mean_alfa_af4 <- mean(as.numeric(wt_af4@V$V3))
+      # mean_beta_af4 <- mean(as.numeric(wt_af4@V$V4))
+      sd_delta_af4 <- sd(as.numeric(wt_af4@W$W1))
+      # sd_theta_af4 <- sd(as.numeric(wt_af4@V$V2))
+      # sd_alfa_af4 <- sd(as.numeric(wt_af4@V$V3))
+      # sd_beta_af4 <- sd(as.numeric(wt_af4@V$V4))
       
-      mean_delta_o1 <- mean(as.numeric(wt_o1@V$V1))
-      mean_theta_o1 <- mean(as.numeric(wt_o1@V$V2))
-      mean_alfa_o1 <- mean(as.numeric(wt_o1@V$V3))
-      mean_beta_o1 <- mean(as.numeric(wt_o1@V$V4))
-      sd_delta_o1 <- sd(as.numeric(wt_o1@V$V1))
-      sd_theta_o1 <- sd(as.numeric(wt_o1@V$V2))
-      sd_alfa_o1 <- sd(as.numeric(wt_o1@V$V3))
-      sd_beta_o1 <- sd(as.numeric(wt_o1@V$V4))
+      mean_delta_o1 <- mean(as.numeric(wt_o1@W$W1))
+      # mean_theta_o1 <- mean(as.numeric(wt_o1@V$V2))
+      # mean_alfa_o1 <- mean(as.numeric(wt_o1@V$V3))
+      # mean_beta_o1 <- mean(as.numeric(wt_o1@V$V4))
+      sd_delta_o1 <- sd(as.numeric(wt_o1@W$W1))
+      # sd_theta_o1 <- sd(as.numeric(wt_o1@V$V2))
+      # sd_alfa_o1 <- sd(as.numeric(wt_o1@V$V3))
+      # sd_beta_o1 <- sd(as.numeric(wt_o1@V$V4))
       
-      mean_delta_o2 <- mean(as.numeric(wt_o2@V$V1))
-      mean_theta_o2 <- mean(as.numeric(wt_o2@V$V2))
-      mean_alfa_o2 <- mean(as.numeric(wt_o2@V$V3))
-      mean_beta_o2 <- mean(as.numeric(wt_o2@V$V4))
-      sd_delta_o2 <- sd(as.numeric(wt_o2@V$V1))
-      sd_theta_o2 <- sd(as.numeric(wt_o2@V$V2))
-      sd_alfa_o2 <- sd(as.numeric(wt_o2@V$V3))
-      sd_beta_o2 <- sd(as.numeric(wt_o2@V$V4))
+      mean_delta_o2 <- mean(as.numeric(wt_o2@W$W1))
+      # mean_theta_o2 <- mean(as.numeric(wt_o2@V$V2))
+      # mean_alfa_o2 <- mean(as.numeric(wt_o2@V$V3))
+      # mean_beta_o2 <- mean(as.numeric(wt_o2@V$V4))
+      sd_delta_o2 <- sd(as.numeric(wt_o2@W$W1))
+      # sd_theta_o2 <- sd(as.numeric(wt_o2@V$V2))
+      # sd_alfa_o2 <- sd(as.numeric(wt_o2@V$V3))
+      # sd_beta_o2 <- sd(as.numeric(wt_o2@V$V4))
       t <- j - time1 + 1
-      temp <- data.frame(i, t, mean_delta_f3, mean_theta_f3, mean_alfa_f3, mean_beta_f3, sd_delta_f3, sd_theta_f3, sd_alfa_f3, sd_beta_f3,
-              mean_delta_f4, mean_theta_f4, mean_alfa_f4, mean_beta_f4, sd_delta_f4, sd_theta_f4, sd_alfa_f4, sd_beta_f4,
-              mean_delta_af3, mean_theta_af3, mean_alfa_af3, mean_beta_af3, sd_delta_af3, sd_theta_af3, sd_alfa_af3, sd_beta_af3,
-              mean_delta_af4, mean_theta_af4, mean_alfa_af4, mean_beta_af4, sd_delta_af4, sd_theta_af4, sd_alfa_af4, sd_beta_af4,
-              mean_delta_o1, mean_theta_o1, mean_alfa_o1, mean_beta_o1, sd_delta_o1, sd_theta_o1, sd_alfa_o1, sd_beta_o1)
+      # temp <- data.frame(i, t, mean_delta_f3, mean_theta_f3, mean_alfa_f3, mean_beta_f3, sd_delta_f3, sd_theta_f3, sd_alfa_f3, sd_beta_f3,
+      #         mean_delta_f4, mean_theta_f4, mean_alfa_f4, mean_beta_f4, sd_delta_f4, sd_theta_f4, sd_alfa_f4, sd_beta_f4,
+      #         mean_delta_af3, mean_theta_af3, mean_alfa_af3, mean_beta_af3, sd_delta_af3, sd_theta_af3, sd_alfa_af3, sd_beta_af3,
+      #         mean_delta_af4, mean_theta_af4, mean_alfa_af4, mean_beta_af4, sd_delta_af4, sd_theta_af4, sd_alfa_af4, sd_beta_af4,
+      #         mean_delta_o1, mean_theta_o1, mean_alfa_o1, mean_beta_o1, sd_delta_o1, sd_theta_o1, sd_alfa_o1, sd_beta_o1,
+      #         mean_delta_o2, mean_theta_o2, mean_alfa_o2, mean_beta_o2, sd_delta_o2, sd_theta_o2, sd_alfa_o2, sd_beta_o2)
+      
+      temp <- data.frame(i, t, mean_delta_f3,sd_delta_f3,
+                         mean_delta_f4,sd_delta_f4,
+                         mean_delta_af3, sd_delta_af3, 
+                         mean_delta_af4, sd_delta_af4,
+                         mean_delta_o1,  sd_delta_o1,
+                         mean_delta_o2, sd_delta_o2)
       
       dwf <- rbind(dwf, temp)
       
@@ -244,7 +252,7 @@ for(i in 1:max_count){
   }
 }
 
-folder <- "Caracteristicas-v"
+folder <- "Caracteristicas-ALFA-W"
 dir.create(folder, showWarnings = FALSE)
 write.csv(dwf, file.path(folder, "Cross-Other.csv"), row.names=FALSE)
 
