@@ -30,6 +30,7 @@ test_hs <- rbind(csv_cross_happy, csv_cross_sad)
 
 final_hs <- predict(modelo_lr_hs, test_hs, type="response")
 
+table(test_hs$ID, final_hs > 0.5)
 
 #Happy vs Other
 csv_happy <- read_csv("Training-Happy.csv")
@@ -57,6 +58,8 @@ test_ho <- rbind(csv_cross_happy, csv_cross_other)
 
 final_ho <- predict(modelo_lr_ho, test_ho, type="response")
 
+table(test_ho$ID, final_ho > 0.5)
+
 #Other vs Sad
 csv_sad <- read_csv("Training-Sad.csv")
 csv_other <- read_csv("Training-Other.csv")
@@ -82,3 +85,5 @@ csv_cross_other$ID <- 0
 test_so <- rbind(csv_cross_sad, csv_cross_other)
 
 final_so <- predict(modelo_lr_so, test_so, type="response")
+
+table(test_so$ID, final_so > 0.5)

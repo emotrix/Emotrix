@@ -1,7 +1,7 @@
 #Diego Jacobs - 13160
 install.packages("e1071")
 
-library("e1071")
+library(e1071)
 
 #Example
 head(iris,5)
@@ -43,17 +43,17 @@ csv_sad$ID <- 0
 
 training_hs <- rbind(csv_happy, csv_sad)
 
-svm_model_hs <- svm(ID ~ ., data=training_hs)
+svm_model_hs <- svm(ID ~ ., data=training_hs, probability=TRUE)
+summary(svm_model_hs)
 
 csv_cross_happy$ID <- 1
 csv_cross_sad$ID <- 0
 
 test_hs <- rbind(csv_cross_happy, csv_cross_sad)
 
-pred_hs <- predict(svm_model_hs, test_hs)
+pred_hs <- predict(svm_model_hs, test_hs, probability=TRUE)
 
-y_hs <- test_hs$ID
-table(pred_hs, y_hs)
+table(test_hs$ID, pred_hs  > 0.5)
 
 #Happy vs Other
 csv_happy <- read_csv("Training-Happy.csv")
@@ -73,17 +73,16 @@ csv_other$ID <- 0
 
 training_ho <- rbind(csv_happy, csv_other)
 
-svm_model_ho <- svm(ID ~ ., data=training_ho)
+svm_model_ho <- svm(ID ~ ., data=training_ho, probability=TRUE)
 
 csv_cross_happy$ID <- 1
 csv_cross_other$ID <- 0
 
 test_ho <- rbind(csv_cross_happy, csv_cross_other)
 
-pred_ho <- predict(svm_model_ho, test_ho)
+pred_ho <- predict(svm_model_ho, test_ho, probability=TRUE)
 
-y_ho <- test_ho$ID
-table(pred_ho, y_ho)
+table(test_ho$ID, pred_ho)
 
 
 
@@ -105,14 +104,14 @@ csv_other$ID <- 0
 
 training_so <- rbind(csv_sad, csv_other)
 
-svm_model_so <- svm(ID ~ ., data=training_so)
+svm_model_so <- svm(ID ~ ., data=training_so, probability=TRUE)
 
 csv_cross_sad$ID <- 1
 csv_cross_other$ID <- 0
 
 test_so <- rbind(csv_cross_sad, csv_cross_other)
 
-pred_so <- predict(svm_model_so, test_so)
+pred_so <- predict(svm_model_so, test_so, probability=TRUE)
 
 y_so <- test_so$ID
 table(pred_so, y_so)
