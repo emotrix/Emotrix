@@ -1,6 +1,5 @@
-#Mario Barrientos - 13039
-#KMeans - Clustering
-
+#Mario Barrientos - 13039 
+#NEURAL NETWORKS
 library(readr)
 library(wavelets)
 library(data.table)
@@ -34,44 +33,43 @@ test$j <- NULL
 
 
 #--------------------------
-#TRAINING
-# K-Means Cluster Analysis
+# Neural Network Cluster Analysis
 train2 <- na.omit(train)
 test2 <- na.omit(test)
 
-train2 <- scale(train2)
-fit <- kmeans(train2, 2)
-# get cluster means 
-aggregate(train2,by=list(fit$cluster),FUN=sd)
-# append cluster assignment
-train2 <- data.frame(train2, fit$cluster)
-View(train2)
+dft <- data.frame(matrix(, nrow=17724, ncol=1))
+colnames(dft) <- "teorico"
+dft$teorico <- train2$teorico
+ttrain <- train2
+ttrain$teorico <- NULL
+feats <- names(ttrain)
+# Concatenate strings
+f <- paste(feats,collapse=' + ')
+y <- names(dft)
+f <- paste(y,' ~ ',f)
 
-dfw <- data.frame(matrix(, nrow=17721, ncol=2))
-colnames(dfw) <- c("teorico","kmeans")
-dfw$teorico <- train2$teorico
-dfw$kmeans <- train2$fit.cluster
-a = table(dfw)
+# Convert to formula
+f <- as.formula(f)
+
+
+#TRAINING
+install.packages('neuralnet')
+library(neuralnet)
+nn <- neuralnet(f,train2,hidden=c(2,2,2), threshold = 0.1)
+
+# Compute Predictions off Test Set
+predicted.nn.values <- compute(nn,test)
+
+# Check out net.result
+print(head(predicted.nn.values$net.result))
+
+
+predicted.nn.values$net.result <- sapply(predicted.nn.values$net.result,round,digits=0)
+a <- table(test$Private,predicted.nn.values$net.result)
+# print(a)  
 accuracy <- (a[1]+a[4])/sum(a)
 print(accuracy)
 
 
 
-#_------------------------------
-#TESTING
-test2 <- scale(test2)
-fit <- kmeans(test2, 2)
-# get cluster means 
-aggregate(test2,by=list(fit$cluster),FUN=sd)
-# append cluster assignment
-test2 <- data.frame(test2, fit$cluster)
-#View(test2)
 
-dfw <- data.frame(matrix(, nrow=7597, ncol=2))
-colnames(dfw) <- c("teorico","kmeans")
-dfw$teorico <- test2$teorico
-dfw$kmeans <- test2$fit.cluster
-a = table(dfw)
-accuracy <- (a[1]+a[4])/sum(a)
-# print(a)
-print(accuracy)

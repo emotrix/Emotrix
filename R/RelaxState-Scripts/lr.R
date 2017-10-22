@@ -1,3 +1,5 @@
+#Mario Barrientos - 13039
+#Regresion Logistica 
 library(readr)
 library(wavelets)
 library(data.table)
@@ -31,11 +33,15 @@ test$j <- NULL
 
 #---------------------------------------------------
 #TRAINING
+train <- na.omit(train)
+test <- na.omit(test)
+
 modeloLR<-glm(teorico~., data=train, family=binomial())
 # summary(modeloLR)
 testmodel<-predict(modeloLR, test, type="response")
 a <- table(test$teorico, testmodel > 0.5)
 accuracy <- (a[1]+a[4])/sum(a)
+print(a)
 print(accuracy)
 
 
