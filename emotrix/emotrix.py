@@ -268,7 +268,7 @@ class Emotrix():
 
 
 
-#e = Emotrix()
-#e.pruebas(file_data='user')
-#e.training(file_data='user20.csv')
-#e.graph()
+e = Emotrix()
+e.pruebas(file_data='user')
+e.training(file_data='C:/Users/ANGELFRANCISCOMORALE/Desktop/data/17F2238-data.csv')
+e.graph()

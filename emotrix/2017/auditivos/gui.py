@@ -57,7 +57,7 @@ class AudioPresentation():
         print emotion
         self.selectedEmotion = emotion
     def setFileName(self,name):
-        self.filename = name+'-data.csv'
+        self.filename = 'C:/Users/ANGELFRANCISCOMORALE/Desktop/data/'+name+'-data.csv'
     def startThreads(self):
         thread.start_new_thread(self.playerMusic,())
         thread.start_new_thread(self.emotiv, ())
@@ -174,12 +174,12 @@ def createWidgets():
     root.AuralGUI.grid(row=8,column=0) 
 
 def createApp():
-    app.setFileName(root.Carne.get())
+    app.setFileName(root.Codigo.get())
     app.startThreads()
     
 def key(event):
     letra = event.char
-    print letra
+    #print letra
     if (letra in "aaa"):
         app.setEmotion('happy')
     elif (letra in "sss"):
