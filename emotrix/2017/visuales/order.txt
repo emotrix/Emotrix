@@ -1,2 +1,0 @@
-test2.jpg, HAPPY
-test.jpg, SAD
