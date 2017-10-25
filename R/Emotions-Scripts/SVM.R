@@ -2,70 +2,67 @@
 install.packages("e1071")
 
 library(e1071)
-
-#Example
-head(iris,5)
-
-attach(iris)
-
-x <- subset(iris, select=-Species)
-y <- Species
-
-svm_model <- svm(Species ~ ., data=iris)
-summary(svm_model)
-
-pred <- predict(svm_model,x)
-system.time(pred <- predict(svm_model,x))
-
-table(pred,y)
-
-
-
-
+library(readr)
 #Emotrix
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-ALFA-W")
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-Audio-W")
 
 #Happy vs Sad
 csv_happy <- read_csv("Training-Happy.csv")
 csv_sad <- read_csv("Training-Sad.csv")
-csv_cross_happy <- read_csv("Cross-Happy.csv")
-csv_cross_sad <- read_csv("Cross-Sad.csv")
+# csv_cross_happy <- read_csv("Cross-Happy.csv")
+# csv_cross_sad <- read_csv("Cross-Sad.csv")
 
+drops <- c("count_happy", "count_sad", "count_co_happy", "count_co_sad", "count_other", "count_co_other",
+           "Image/Audio", "Time", "Exact Time"
+           , "F3_Quality", "F4_Quality", "AF3_Quality", "AF4_Quality", "O1_Quality", "O2_Quality"
+           ,"Emotion", "Selected Emotion", "i","t")
 
-drops <- c("i","t")
 csv_happy <- csv_happy[ , !(names(csv_happy) %in% drops)]
 csv_sad <- csv_sad[ , !(names(csv_sad) %in% drops)]
-csv_cross_happy <- csv_cross_happy[ , !(names(csv_cross_happy) %in% drops)]
-csv_cross_sad <- csv_cross_sad[ , !(names(csv_cross_sad) %in% drops)]
+# csv_cross_happy <- csv_cross_happy[ , !(names(csv_cross_happy) %in% drops)]
+# csv_cross_sad <- csv_cross_sad[ , !(names(csv_cross_sad) %in% drops)]
 
 csv_happy$ID <- 1
 csv_sad$ID <- 0
+# csv_cross_happy$ID <- 1
+# csv_cross_sad$ID <- 0
 
-training_hs <- rbind(csv_happy, csv_sad)
+total <- rbind(csv_happy, csv_sad)
+# total <- rbind(total, csv_cross_happy)
+# total <- rbind(total, csv_cross_sad)
 
-svm_model_hs <- svm(ID ~ ., data=training_hs, probability=TRUE)
-summary(svm_model_hs)
+#Separar en train y test
+#install.packages("caTools")
+library("caTools")
 
-csv_cross_happy$ID <- 1
-csv_cross_sad$ID <- 0
+sample <- sample.split(total$ID, SplitRatio = .70)
+train<-subset(total, sample==TRUE)
+test<-subset(total, sample==FALSE)
 
-test_hs <- rbind(csv_cross_happy, csv_cross_sad)
-
-pred_hs <- predict(svm_model_hs, test_hs, probability=TRUE)
+svm_model_hs <- svm(ID ~ ., data=train, probability=TRUE)
+pred_hs <- predict(svm_model_hs, test, probability=TRUE)
 
 final_hs <- round(pred_hs)
-list_hs <- unlist(test_hs$ID)
-table(list_hs, final_hs)
+list_hs <- unlist(test$ID)
 
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas")
+a <- table(list_hs, final_hs)
+accuracy <- (a[1]+a[4])/sum(a)
+print(accuracy*100)
+
+library(e1071)
+library(readr)
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-ALFA-W")
 #Happy vs Other
 csv_happy <- read_csv("Training-Happy.csv")
 csv_other <- read_csv("Training-Other.csv")
 csv_cross_happy <- read_csv("Cross-Happy.csv")
 csv_cross_other <- read_csv("Cross-Other.csv")
 
+drops <- c("count_happy", "count_sad", "count_co_happy", "count_co_sad", "count_other", "count_co_other",
+           "Image/Audio", "Time", "Exact Time"
+           , "F3_Quality", "F4_Quality", "AF3_Quality", "AF4_Quality", "O1_Quality", "O2_Quality"
+           ,"Emotion", "Selected Emotion", "i","t")
 
-drops <- c("i","t")
 csv_happy <- csv_happy[ , !(names(csv_happy) %in% drops)]
 csv_other <- csv_other[ , !(names(csv_other) %in% drops)]
 csv_cross_happy <- csv_cross_happy[ , !(names(csv_cross_happy) %in% drops)]
@@ -73,30 +70,46 @@ csv_cross_other <- csv_cross_other[ , !(names(csv_cross_other) %in% drops)]
 
 csv_happy$ID <- 1
 csv_other$ID <- 0
-
-training_ho <- rbind(csv_happy, csv_other)
-
-svm_model_ho <- svm(ID ~ ., data=training_ho, probability=TRUE)
-
 csv_cross_happy$ID <- 1
 csv_cross_other$ID <- 0
 
-test_ho <- rbind(csv_cross_happy, csv_cross_other)
+total <- rbind(csv_happy, csv_other)
+total <- rbind(total, csv_cross_happy)
+total <- rbind(total, csv_cross_other)
 
-pred_ho <- predict(svm_model_ho, test_ho, probability=TRUE)
+#Separar en train y test
+install.packages("caTools")
+library("caTools")
 
-table(test_ho$ID, pred_ho > 0.5)
+sample <- sample.split(total$ID, SplitRatio = .70)
+train<-subset(total, sample==TRUE)
+test<-subset(total, sample==FALSE)
+
+svm_model_ho <- svm(ID ~ ., data=train, probability=TRUE)
+pred_ho <- predict(svm_model_ho, test, probability=TRUE)
+
+final_ho <- round(pred_ho)
+list_ho <- unlist(test$ID)
+
+a <- table(list_ho, final_ho)
+accuracy <- (a[1]+a[4])/sum(a)
+print(accuracy*100)
 
 
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-ALFA-W")
+library(e1071)
+library(readr)
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-ALFA-V")
 #Sad vs Other
 csv_sad <- read_csv("Training-Sad.csv")
 csv_other <- read_csv("Training-Other.csv")
 csv_cross_sad <- read_csv("Cross-Sad.csv")
 csv_cross_other <- read_csv("Cross-Other.csv")
 
+drops <- c("count_happy", "count_sad", "count_co_happy", "count_co_sad", "count_other", "count_co_other",
+           "Image/Audio", "Time", "Exact Time"
+           , "F3_Quality", "F4_Quality", "AF3_Quality", "AF4_Quality", "O1_Quality", "O2_Quality"
+           ,"Emotion", "Selected Emotion", "i","t")
 
-drops <- c("i","t")
 csv_sad <- csv_sad[ , !(names(csv_sad) %in% drops)]
 csv_other <- csv_other[ , !(names(csv_other) %in% drops)]
 csv_cross_sad <- csv_cross_sad[ , !(names(csv_cross_sad) %in% drops)]
@@ -104,22 +117,35 @@ csv_cross_other <- csv_cross_other[ , !(names(csv_cross_other) %in% drops)]
 
 csv_sad$ID <- 1
 csv_other$ID <- 0
-
-training_so <- rbind(csv_sad, csv_other)
-
-svm_model_so <- svm(ID ~ ., data=training_so, probability=TRUE)
-
 csv_cross_sad$ID <- 1
 csv_cross_other$ID <- 0
 
-test_so <- rbind(csv_cross_sad, csv_cross_other)
+total <- rbind(csv_sad, csv_other)
+total <- rbind(total, csv_cross_sad)
+total <- rbind(total, csv_cross_other)
 
-pred_so <- predict(svm_model_so, test_so, probability=TRUE)
+#Separar en train y test
+install.packages("caTools")
+library("caTools")
 
-table(test_so$ID, pred_so > 0.5)
+sample <- sample.split(total$ID, SplitRatio = .70)
+train<-subset(total, sample==TRUE)
+test<-subset(total, sample==FALSE)
+
+svm_model_so <- svm(ID ~ ., data=train, probability=TRUE)
+pred_so <- predict(svm_model_so, test, probability=TRUE)
+
+final_so <- round(pred_so)
+list_so <- unlist(test$ID)
+
+a <- table(list_so, final_so)
+accuracy <- (a[1]+a[4])/sum(a)
+print(accuracy*100)
 
 
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-ALFA-W")
+library(e1071)
+library(readr)
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas-ALFA-V")
 #Happy vs Sad vs Other
 csv_happy <- read_csv("Training-Happy.csv")
 csv_sad <- read_csv("Training-Sad.csv")
@@ -128,8 +154,11 @@ csv_cross_happy <- read_csv("Cross-Happy.csv")
 csv_cross_sad <- read_csv("Cross-Sad.csv")
 csv_cross_other <- read_csv("Cross-Other.csv")
 
+drops <- c("count_happy", "count_sad", "count_co_happy", "count_co_sad", "count_other", "count_co_other",
+           "Image/Audio", "Time", "Exact Time"
+           , "F3_Quality", "F4_Quality", "AF3_Quality", "AF4_Quality", "O1_Quality", "O2_Quality"
+           ,"Emotion", "Selected Emotion", "i","t")
 
-drops <- c("i","t")
 csv_happy <- csv_happy[ , !(names(csv_happy) %in% drops)]
 csv_sad <- csv_sad[ , !(names(csv_sad) %in% drops)]
 csv_other <- csv_other[ , !(names(csv_other) %in% drops)]
@@ -140,20 +169,31 @@ csv_cross_other <- csv_cross_other[ , !(names(csv_cross_other) %in% drops)]
 csv_happy$ID <- 1
 csv_sad$ID <- 0
 csv_other$ID <- -1
-
-training_so <- rbind(csv_sad, csv_other)
-training_so <- rbind(training_so, csv_happy)
-
-svm_model_so <- svm(ID ~ ., data=training_so, probability=TRUE)
-
 csv_cross_happy$ID <- 1
 csv_cross_sad$ID <- 0
 csv_cross_other$ID <- -1
 
-test_so <- rbind(csv_cross_sad, csv_cross_other)
-test_so <- rbind(test_so, csv_cross_happy)
+total <- rbind(csv_sad, csv_other)
+total <- rbind(total, csv_happy)
+total <- rbind(total, csv_cross_sad)
+total <- rbind(total, csv_cross_other)
+total <- rbind(total, csv_cross_happy)
 
-pred_so <- predict(svm_model_so, test_so, probability=TRUE)
+#Separar en train y test
+install.packages("caTools")
+library("caTools")
 
-table(test_so$ID, pred_so > 0.5)
+sample <- sample.split(total$ID, SplitRatio = .70)
+train<-subset(total, sample==TRUE)
+test<-subset(total, sample==FALSE)
+
+svm_model_hso <- svm(ID ~ ., data=train, probability=TRUE)
+pred_hso <- predict(svm_model_hso, test, probability=TRUE)
+
+final_hso <- round(pred_hso)
+list_hso <- unlist(test$ID)
+
+a <- table(list_hso, final_hso)
+accuracy <- (a[1]+a[5]+a[9])/sum(a)
+print(accuracy*100)
 

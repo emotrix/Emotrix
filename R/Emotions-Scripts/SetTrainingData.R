@@ -5,29 +5,43 @@ library(data.table)
 library(signal)
 
 setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data")
-files <- list.files(path="D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data", pattern="csv$", full.names=FALSE, recursive=FALSE)
-
+# files <- list.files(path="D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data", pattern="csv$", full.names=FALSE, recursive=FALSE)
+files <- c("17F2019.csv",
+           "17F2238.csv",
+           "17F2239.csv",
+           "17F2315.csv",
+           "17F2318.csv",
+           "17F2340.csv",
+           "17F2341.csv",
+           "17M2021.csv",
+           "17M2025.csv",
+           "17M2030.csv",
+           "17M2102.csv",
+           "17M2107.csv",
+           "17M2127.csv",
+           "17M2131.csv",
+           "17M2132.csv",
+           "17M2134.csv",
+           "17M2135.csv",
+           "17M2210.csv",
+           #"17M22234.csv",
+           "17M2250.csv",
+           "17M2313.csv",
+           "17M2322.csv",
+           "17M2344.csv",
+           "17M2351.csv",
+           "17M2701.csv")
 #Values
 count_happy <- 0
 count_sad <- 0
 count_other <- 0
-count_training <- 480
-
-count_co_happy <- 0
-count_co_sad <- 0
-count_co_other <- 0
 
 #Trainning Tables
 happy_table <- data.table()
 other_table <- data.table()
 sad_table <- data.table()
 
-#Cross-Over Validation Tables
-co_happy_table <- data.table()
-co_other_table <- data.table()
-co_sad_table <- data.table()
-
-#Generar tablas de training y cross-over validation
+#Generar tablas de training
 #Happy, Sad y Other
 for(i in 1:length(files)){
   csv <- read_csv(files[i], col_types = cols(`Exact Time` = col_double()))
@@ -35,85 +49,36 @@ for(i in 1:length(files)){
   DT <- data.table(csv)
   
   table <- DT[`Selected Emotion` == "happy"]
-  
+
   if(nrow(table) > 0) {
-    if(count_happy < count_training){
-      for(j in 1:nrow(table)) {
-        if(count_happy == count_training){
-          temp <- cbind(count_co_happy, DT[Time == table[j]$Time])
-          co_happy_table <- rbind(co_happy_table, temp)
-          count_co_happy <- count_co_happy + 1
-        } else{
-          temp <- cbind(count_happy, DT[Time == table[j]$Time])
-          happy_table <- rbind(happy_table, temp)
-          count_happy <- count_happy + 1
-        }
-      } 
-    } else {
-      
-      for(j in 1:nrow(table)) {
-        temp <- cbind(count_co_happy, DT[Time == table[j]$Time])
-        co_happy_table <- rbind(co_happy_table, temp)
-        count_co_happy <- count_co_happy + 1
-      }
-    } 
+    for(j in 1:nrow(table)) {
+      temp <- cbind(count_happy, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+      happy_table <- rbind(happy_table, temp)
+      count_happy <- count_happy + 1
+    }
   }
   
   table <- DT[`Selected Emotion` == "sad"]
   if(nrow(table) > 0) {
-    if(count_sad < count_training){
-      
-      
-      for(j in 1:nrow(table)) {
-        if(count_sad == count_training){
-          temp <- cbind(count_co_sad, DT[Time == table[j]$Time])
-          co_sad_table <- rbind(co_sad_table, temp)
-          count_co_sad <- count_co_sad + 1
-        } else{
-          temp <- cbind(count_sad, DT[Time == table[j]$Time])
-          sad_table <- rbind(sad_table, temp)
-          count_sad <- count_sad + 1
-        }
-      }
-    } else {
-      
-      for(j in 1:nrow(table)) {
-        temp <- cbind(count_co_sad, DT[Time == table[j]$Time])
-        co_sad_table <- rbind(co_sad_table, temp)
-        count_co_sad <- count_co_sad + 1
-      }
-    } 
+    for(j in 1:nrow(table)) {
+      temp <- cbind(count_sad, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+      sad_table <- rbind(sad_table, temp)
+      count_sad <- count_sad + 1
+    }
   }
-  
+
   table <- DT[`Selected Emotion` == "other"]
-  
+
   if(nrow(table) > 0){
-    if(count_other < count_training){
-      
-      for(j in 1:nrow(table)) {
-        if(count_other == count_training){
-          temp <- cbind(count_co_other, DT[Time == table[j]$Time])
-          co_other_table <- rbind(co_other_table, temp)
-          count_co_other <- count_co_other + 1
-        } else{
-          temp <- cbind(count_other, DT[Time == table[j]$Time])
-          other_table <- rbind(other_table, temp)
-          count_other <- count_other + 1
-        }
-      }
-    } else {
-      
-      for(j in 1:nrow(table)) {
-        temp <- cbind(count_co_other, DT[Time == table[j]$Time])
-        co_other_table <- rbind(co_other_table, temp)
-        count_co_other <- count_co_other + 1
-      }
-    } 
+    for(j in 1:nrow(table)) {
+      temp <- cbind(count_other, DT[Time == table[j]$Time | Time == (table[j]$Time - 1) | Time == (table[j]$Time + 1)])
+      other_table <- rbind(other_table, temp)
+      count_other <- count_other + 1
+    }
   }
-  
 }
 
-folder <- "Training-Data-1s"
+folder <- "Training-Data/Audio"
 
 dir.create(folder, showWarnings = FALSE)
 write.csv(happy_table, file.path(folder, "Training-Happy.csv"), row.names=FALSE)
@@ -124,21 +89,12 @@ write.csv(other_table, file.path(folder, "Training-Other.csv"), row.names=FALSE)
 dir.create(folder, showWarnings = FALSE)
 write.csv(sad_table, file.path(folder, "Training-Sad.csv"), row.names=FALSE)
 
-dir.create(folder, showWarnings = FALSE)
-write.csv(co_happy_table, file.path(folder, "Cross-Happy.csv"), row.names=FALSE)
 
-dir.create(folder, showWarnings = FALSE)
-write.csv(co_other_table, file.path(folder, "Cross-Other.csv"), row.names=FALSE)
-
-dir.create(folder, showWarnings = FALSE)
-write.csv(co_sad_table, file.path(folder, "Cross-Sad.csv"), row.names=FALSE)
-
-
-setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data")
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Training-Data/Audio")
 #Generar las caracteristicas para entrenar algoritmos por electrodo
 #Media y Desviacion Estandard
 #Ondas Alfa, Beta, Delta y Theta
-max_count <- max(co_other_table$count_co_other)
+max_count <- max(happy_table$count_happy)
 dwf <- data.frame(matrix(, nrow = 0,ncol = 10))
 #BAND PASS FILTER 
 #arguments
@@ -148,14 +104,14 @@ dwf <- data.frame(matrix(, nrow = 0,ncol = 10))
 # plane: analog filter
 bf <- butter(n=1,W=c(8, 14)/1024, type="pass",plane="s")
 
-for(i in 1:max_count){
-  observation <- co_other_table[co_other_table$count_co_other == i]
+for(i in 0:max_count){
+  observation <- happy_table[happy_table$count_happy == i]
   time1 <- min(observation$Time)
   time2 <- time1 + 1
   time3 <- time2 + 1
   
   for(j in time1:time3){
-    DT <- co_other_table[(Time == j & count_co_other == i)]  
+    DT <- happy_table[(Time == j & count_happy == i)]  
     
     f3 <- filter(bf, DT$F3)
     f4 <- filter(bf, DT$F4)
@@ -173,40 +129,40 @@ for(i in 1:max_count){
       wt_o2 <- dwt(as.numeric(o2), filter='d4', n.levels=1, boundary="periodic", fast=FALSE)
       
       mean_delta_f3 <- mean(as.numeric(wt_f3@W$W1))
-      # mean_theta_f3 <- mean(as.numeric(wt_f3@V$V2))
-      # mean_alfa_f3 <- mean(as.numeric(wt_f3@V$V3))
-      # mean_beta_f3 <- mean(as.numeric(wt_f3@V$V4))
+      # mean_theta_f3 <- mean(as.numeric(wt_f3@W$W2))
+      # mean_alfa_f3 <- mean(as.numeric(wt_f3@W$W3))
+      # mean_beta_f3 <- mean(as.numeric(wt_f3@W$W4))
       sd_delta_f3 <- sd(as.numeric(wt_f3@W$W1))
-      # sd_theta_f3 <- sd(as.numeric(wt_f3@V$V2))
-      # sd_alfa_f3 <- sd(as.numeric(wt_f3@V$V3))
-      # sd_beta_f3 <- sd(as.numeric(wt_f3@V$V4))
+      # sd_theta_f3 <- sd(as.numeric(wt_f3@W$W2))
+      # sd_alfa_f3 <- sd(as.numeric(wt_f3@W$W3))
+      # sd_beta_f3 <- sd(as.numeric(wt_f3@W$W4))
       
       mean_delta_f4 <- mean(as.numeric(wt_f4@W$W1))
-      # mean_theta_f4 <- mean(as.numeric(wt_f4@V$V2))
-      # mean_alfa_f4 <- mean(as.numeric(wt_f4@V$V3))
-      # mean_beta_f4 <- mean(as.numeric(wt_f4@V$V4))
+      # mean_theta_f4 <- mean(as.numeric(wt_f4@W$W2))
+      # mean_alfa_f4 <- mean(as.numeric(wt_f4@W$W3))
+      # mean_beta_f4 <- mean(as.numeric(wt_f4@W$W4))
       sd_delta_f4 <- sd(as.numeric(wt_f4@W$W1))
-      # sd_theta_f4 <- sd(as.numeric(wt_f4@V$V2))
-      # sd_alfa_f4 <- sd(as.numeric(wt_f4@V$V3))
-      # sd_beta_f4 <- sd(as.numeric(wt_f4@V$V4))
+      # sd_theta_f4 <- sd(as.numeric(wt_f4@W$W2))
+      # sd_alfa_f4 <- sd(as.numeric(wt_f4@W$W3))
+      # sd_beta_f4 <- sd(as.numeric(wt_f4@W$W4))
       
       mean_delta_af3 <- mean(as.numeric(wt_af3@W$W1))
-      # mean_theta_af3 <- mean(as.numeric(wt_af3@V$V2))
-      # mean_alfa_af3 <- mean(as.numeric(wt_af3@V$V3))
-      # mean_beta_af3 <- mean(as.numeric(wt_af3@V$V4))
+      # mean_theta_af3 <- mean(as.numeric(wt_af3@W$W2))
+      # mean_alfa_af3 <- mean(as.numeric(wt_af3@W$W3))
+      # mean_beta_af3 <- mean(as.numeric(wt_af3@W$W4))
       sd_delta_af3 <- sd(as.numeric(wt_af3@W$W1))
-      # sd_theta_af3 <- sd(as.numeric(wt_af3@V$V2))
-      # sd_alfa_af3 <- sd(as.numeric(wt_af3@V$V3))
-      # sd_beta_af3 <- sd(as.numeric(wt_af3@V$V4))
+      # sd_theta_af3 <- sd(as.numeric(wt_af3@W$W2))
+      # sd_alfa_af3 <- sd(as.numeric(wt_af3@W$W3))
+      # sd_beta_af3 <- sd(as.numeric(wt_af3@W$W4))
       
       mean_delta_af4 <- mean(as.numeric(wt_af4@W$W1))
-      # mean_theta_af4 <- mean(as.numeric(wt_af4@V$V2))
-      # mean_alfa_af4 <- mean(as.numeric(wt_af4@V$V3))
-      # mean_beta_af4 <- mean(as.numeric(wt_af4@V$V4))
+      # mean_theta_af4 <- mean(as.numeric(wt_af4@W$W2))
+      # mean_alfa_af4 <- mean(as.numeric(wt_af4@W$W3))
+      # mean_beta_af4 <- mean(as.numeric(wt_af4@W$W4))
       sd_delta_af4 <- sd(as.numeric(wt_af4@W$W1))
-      # sd_theta_af4 <- sd(as.numeric(wt_af4@V$V2))
-      # sd_alfa_af4 <- sd(as.numeric(wt_af4@V$V3))
-      # sd_beta_af4 <- sd(as.numeric(wt_af4@V$V4))
+      # sd_theta_af4 <- sd(as.numeric(wt_af4@W$W2))
+      # sd_alfa_af4 <- sd(as.numeric(wt_af4@w$w3))
+      # sd_beta_af4 <- sd(as.numeric(wt_af4@w$w4))
       
       mean_delta_o1 <- mean(as.numeric(wt_o1@W$W1))
       # mean_theta_o1 <- mean(as.numeric(wt_o1@V$V2))
@@ -218,13 +174,13 @@ for(i in 1:max_count){
       # sd_beta_o1 <- sd(as.numeric(wt_o1@V$V4))
       
       mean_delta_o2 <- mean(as.numeric(wt_o2@W$W1))
-      # mean_theta_o2 <- mean(as.numeric(wt_o2@V$V2))
-      # mean_alfa_o2 <- mean(as.numeric(wt_o2@V$V3))
-      # mean_beta_o2 <- mean(as.numeric(wt_o2@V$V4))
+      # mean_theta_o2 <- mean(as.numeric(wt_o2@W$W2))
+      # mean_alfa_o2 <- mean(as.numeric(wt_o2@W$W3))
+      # mean_beta_o2 <- mean(as.numeric(wt_o2@W$W4))
       sd_delta_o2 <- sd(as.numeric(wt_o2@W$W1))
-      # sd_theta_o2 <- sd(as.numeric(wt_o2@V$V2))
-      # sd_alfa_o2 <- sd(as.numeric(wt_o2@V$V3))
-      # sd_beta_o2 <- sd(as.numeric(wt_o2@V$V4))
+      # sd_theta_o2 <- sd(as.numeric(wt_o2@W$V2))
+      # sd_alfa_o2 <- sd(as.numeric(wt_o2@W$W3))
+      # sd_beta_o2 <- sd(as.numeric(wt_o2@W$W4))
       t <- j - time1 + 1
       # temp <- data.frame(i, t, mean_delta_f3, mean_theta_f3, mean_alfa_f3, mean_beta_f3, sd_delta_f3, sd_theta_f3, sd_alfa_f3, sd_beta_f3,
       #         mean_delta_f4, mean_theta_f4, mean_alfa_f4, mean_beta_f4, sd_delta_f4, sd_theta_f4, sd_alfa_f4, sd_beta_f4,
@@ -232,14 +188,14 @@ for(i in 1:max_count){
       #         mean_delta_af4, mean_theta_af4, mean_alfa_af4, mean_beta_af4, sd_delta_af4, sd_theta_af4, sd_alfa_af4, sd_beta_af4,
       #         mean_delta_o1, mean_theta_o1, mean_alfa_o1, mean_beta_o1, sd_delta_o1, sd_theta_o1, sd_alfa_o1, sd_beta_o1,
       #         mean_delta_o2, mean_theta_o2, mean_alfa_o2, mean_beta_o2, sd_delta_o2, sd_theta_o2, sd_alfa_o2, sd_beta_o2)
-      
+      # 
       temp <- data.frame(i, t, mean_delta_f3,sd_delta_f3,
                          mean_delta_f4,sd_delta_f4,
-                         mean_delta_af3, sd_delta_af3, 
+                         mean_delta_af3, sd_delta_af3,
                          mean_delta_af4, sd_delta_af4,
                          mean_delta_o1,  sd_delta_o1,
                          mean_delta_o2, sd_delta_o2)
-      
+      # 
       dwf <- rbind(dwf, temp)
       
     }, warning = function(w) {
@@ -252,9 +208,10 @@ for(i in 1:max_count){
   }
 }
 
-folder <- "Caracteristicas-ALFA-W"
+setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data")
+folder <- "Caracteristicas-Audio-W"
 dir.create(folder, showWarnings = FALSE)
-write.csv(dwf, file.path(folder, "Cross-Other.csv"), row.names=FALSE)
+write.csv(dwf, file.path(folder, "Training-Happy.csv"), row.names=FALSE)
 
 setwd("D:/Diego Jacobs/Documents/Emotrix/emotrix/2017/Data/Emotions-Unique-Data/Caracteristicas")
 
