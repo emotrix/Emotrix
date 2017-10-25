@@ -25,8 +25,18 @@ python main.py
 ```
 ## API
 
-### 
+### Estimulos Visuales
+Nombre del archivo: [main.py](https://github.com/emotrix/Emotrix/blob/master/emotrix/2017/Estimulos_Visuales/main.py)
 
+Directorio: */emotrix/2017/Estimulos_Visuales/...*
+
+Este programa genera un archivo con las lecturas obtenidas del casco Emotiv EPOC y a su vez presenta diferentes estimulos visuales que buscan estimular diferentes emociones en el sujeto que lo este usando.
+### Estimulos Auditivos
+Nombre del archivo: [gui.py](https://github.com/emotrix/Emotrix/blob/master/emotrix/2017/auditivos/gui.py)
+
+Directorio: */emotrix/2017/auditivos/...*
+
+Este programa genera un archivo con las lecturas obtenidas del casco Emotiv EPOC y a su vez presenta diferentes estimulos auditivos que buscan estimular diferentes emociones en el sujeto que lo este usando.
 ## Codigo Fuente Para Estados de Relajacion
 
 ### Regresion Logistica
@@ -41,33 +51,33 @@ python main.py
 Todo el codigo fuente para esta seccion se encuentra dentro del directorio:
 > /R/Emotions-Scripts/...
 ### Obtencion de Emociones Seleccionadas
-Nombre del archivo: *SelectedEmotions.R*
+Nombre del archivo: [*SelectedEmotions.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/SelectedEmotions.R)
 
 Programa que lee cada uno de los archivos generados por el API, luego de la experimentacion, y genera un archivo por cada uno de los archivos anteriores, con la emocion seleccionada por segundo para cada estimulo.
 ### Generacion de Graficas
-Nombre del archivo: *Graphics.R*
+Nombre del archivo: [*Graphics.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/Graphics.R)
 
 Programa que lee cada uno de los archivos generados por el API, luego de la experimentacion, y genera un graficas de las lecturas de cada electrodo del emotiv y de las onda presente en cada segundo de experimentacion.
 
 ### Obtencion de Datos de Entrenamiento y Validacion Cruzada
-Nombre del archivo: *SetTrainingData.R*
+Nombre del archivo: [*SetTrainingData.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/SetTrainingData.R)
 
 Programa que lee cada uno de los archivos generados por el API, luego de la experimentacion, y genera un un archivo con los datos separados para el entrenamiento y validacion de lso algoritmos.
 
 ### Regresion Logistica
-Nombre del archivo: *lr.R*
+Nombre del archivo: [*lr.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/lr.R)
 
 Programa que lee los archivos generados mediante el programa *SetTrainingData.R*, entrana el algoritmo de regresion logistica, hace la validacion cruzada y devuelve el porcentaje de eficiencia.
 ### Maquinas de Soporte Vectorial (SVM)
-Nombre del archivo: *SVM.R*
+Nombre del archivo: [*SVM.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/SVM.R)
 
 Programa que lee los archivos generados mediante el programa *SetTrainingData.R*, entrana el algoritmo de maquinas de soporte vectorial (SVM), hace la validacion cruzada y devuelve el porcentaje de eficiencia.
 ### K-Medias
-Nombre del archivo: *k-means.R*
+Nombre del archivo: [*k-means.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/k-means.R)
 
 Programa que lee los archivos generados mediante el programa *SetTrainingData.R*, utiliza el algoritmo de k-medias para la generacion de clusteres para la prediccion de los estados emocionales. Retorna la eficiencia del algoritmo.
 ### Redes Neuronales
-Nombre del archivo: *Neural-Networks.R*
+Nombre del archivo: [*Neural-Networks.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/Neural-Networks.R)
 
 Programa que lee los archivos generados mediante el programa *SetTrainingData.R*, utiliza el algoritmo de redes neuronales para la prediccion de los estados emocionales. Retorna el porcentaje de eficiencia.
 ## Recomendaciones
