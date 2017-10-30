@@ -86,6 +86,7 @@ Programa que lee los archivos generados mediante el programa [*settingData.R*](h
 ## Código Fuente Para Estados Emocionales
 Todo el código fuente para esta sección se encuentra dentro del directorio:
 > /R/Emotions-Scripts/...
+
 ### Obtención de Emociones Seleccionadas
 Nombre del archivo: [*SelectedEmotions.R*](https://github.com/emotrix/Emotrix/blob/master/R/Emotions-Scripts/SelectedEmotions.R)
 
